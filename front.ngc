@@ -1,0 +1,23 @@
+( pcb2gcode 1.2.1 )
+( Software-independent Gcode )
+      
+
+G94 ( Inches per minute feed rate. )
+G20 ( Units == INCHES. )
+
+G90 ( Absolute coordinates. )
+S20000 ( RPM spindle speed. )
+G64 P0.00200 ( set maximum deviation from commanded toolpath )
+F3.93701 ( Feedrate. )
+
+F3.93701 ( Feedrate. )
+M3 ( Spindle on clockwise. )
+
+G04 P0 ( dwell for no time -- G64 should not smooth over this point )
+G00 Z1.18110 ( retract )
+
+
+M5 ( Spindle off. )
+M9 ( Coolant off. )
+M2 ( Program end. )
+

@@ -1,0 +1,10 @@
+Cmp-Mod V01 Created by Cvpcb 0.201506062246+5717~23~ubuntu15.04.1-product   date = Mo 08 Jun 2015 01:26:29 CEST
+
+BeginCmp
+TimeStamp = /5574D085;
+Reference = SHIELD1;
+ValeurCmp = ARDUINO_SHIELD;
+IdModule  = FT:ARDUINO_SHIELD;
+EndCmp
+
+EndListe

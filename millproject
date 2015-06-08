@@ -1,0 +1,53 @@
+back=arduino-shield-B_Cu.gbr
+#arduino-shield-B_SilkS.gbr
+#arduino-shield-cache.lib
+#arduino-shield.cmp
+#drill=arduino-shield.drl
+drill=arduino-shield.opt.drl
+#arduino-shield-drl_map.ps
+front=arduino-shield-F_Cu.gbr
+outline=arduino-shield-Cmts_User.gbr
+#arduino-shield-F_SilkS.gbr
+#arduino-shield.kicad_pcb
+#arduino-shield.kicad_pcb-bak
+#arduino-shield.net
+#arduino-shield-NPTH.drl
+#arduino-shield-NPTH-drl_map.ps
+#arduino-shield.pro
+#arduino-shield.sch
+#arduino-shield.xml
+
+metric=1
+#svg=test.svg
+
+# parameters for isolation routing / engraving / etching
+zwork=-0.2
+zsafe=2
+zchange=30.0
+mill-feed=100
+mill-speed=20000
+offset=0.25
+
+#extra-passes=1
+
+# parameters for cutting out boards
+cutter-diameter=2
+zcut=-1.6
+cut-feed=200
+cut-speed=20000
+cut-infeed=1
+
+# drilling parameters
+zdrill=-1.6
+drill-feed=200
+drill-speed=20000
+
+#offset=0.006
+# generate voronoi regions
+#offset=2.0
+#dpi=1000
+# #max-deviation=0
+
+preamble=preamble.ngc
+postamble=postamble.ngc
+

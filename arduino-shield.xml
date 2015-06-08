@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="D">
+  <design>
+    <source>/home/koppi/Desktop/arduino-shield/arduino-shield.sch</source>
+    <date>Mo 08 Jun 2015 01:21:46 CEST</date>
+    <tool>Eeschema 0.201506062246+5717~23~ubuntu15.04.1-product</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title/>
+        <company/>
+        <rev/>
+        <date/>
+        <source>arduino-shield.sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="SHIELD1">
+      <value>ARDUINO_SHIELD</value>
+      <footprint>FT:ARDUINO_SHIELD</footprint>
+      <libsource lib="freetronics_schematic" part="ARDUINO_SHIELD"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5574D085</tstamp>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="freetronics_schematic" part="ARDUINO_SHIELD">
+      <description>Arduino shield footprint (power outputs). Original by nicholasclewis</description>
+      <docs>http://www.thingiverse.com/thing:9630</docs>
+      <footprints>
+        <fp>ARDUINO_SHIELD</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">SHIELD</field>
+        <field name="Value">ARDUINO_SHIELD</field>
+        <field name="Footprint">FT:ARDUINO_SHIELD</field>
+      </fields>
+      <pins>
+        <pin num="0" name="0" type="BiDi"/>
+        <pin num="1" name="1" type="BiDi"/>
+        <pin num="2" name="2" type="BiDi"/>
+        <pin num="3" name="3" type="BiDi"/>
+        <pin num="4" name="4" type="BiDi"/>
+        <pin num="5" name="5" type="BiDi"/>
+        <pin num="5V" name="5V" type="power_out"/>
+        <pin num="6" name="6" type="BiDi"/>
+        <pin num="7" name="7" type="BiDi"/>
+        <pin num="8" name="8" type="BiDi"/>
+        <pin num="9" name="9" type="BiDi"/>
+        <pin num="10" name="10" type="BiDi"/>
+        <pin num="11" name="11" type="BiDi"/>
+        <pin num="12" name="12" type="BiDi"/>
+        <pin num="13" name="13" type="BiDi"/>
+        <pin num="3V3" name="3V3" type="power_out"/>
+        <pin num="AD0" name="AD0" type="BiDi"/>
+        <pin num="AD1" name="AD1" type="BiDi"/>
+        <pin num="AD2" name="AD2" type="BiDi"/>
+        <pin num="AD3" name="AD3" type="BiDi"/>
+        <pin num="AD4" name="AD4" type="BiDi"/>
+        <pin num="AD5" name="AD5" type="BiDi"/>
+        <pin num="AREF" name="AREF" type="input"/>
+        <pin num="GND1" name="GND1" type="power_out"/>
+        <pin num="GND2" name="GND2" type="power_out"/>
+        <pin num="GND3" name="GND3" type="power_out"/>
+        <pin num="IO_R" name="IOREF" type="power_out"/>
+        <pin num="NC" name="NC" type="passive"/>
+        <pin num="RST" name="RST" type="input"/>
+        <pin num="SCL" name="SCL" type="output"/>
+        <pin num="SDA" name="SDA" type="BiDi"/>
+        <pin num="SP1" name="MISO" type="BiDi"/>
+        <pin num="SP2" name="Vcc" type="power_out"/>
+        <pin num="SP3" name="SCK" type="BiDi"/>
+        <pin num="SP4" name="MOSI" type="BiDi"/>
+        <pin num="SP5" name="Reset" type="input"/>
+        <pin num="SP6" name="Gnd" type="power_out"/>
+        <pin num="V_IN" name="V_IN" type="power_out"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="freetronics_schematic">
+      <uri>/home/koppi/Desktop/freetronics_kicad_library/freetronics_schematic.lib</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="Net-(SHIELD1-PadSDA)">
+      <node ref="SHIELD1" pin="SDA"/>
+    </net>
+    <net code="2" name="Net-(SHIELD1-PadSP2)">
+      <node ref="SHIELD1" pin="SP2"/>
+    </net>
+    <net code="3" name="Net-(SHIELD1-PadAD3)">
+      <node ref="SHIELD1" pin="AD3"/>
+    </net>
+    <net code="4" name="Net-(SHIELD1-PadSP3)">
+      <node ref="SHIELD1" pin="SP3"/>
+    </net>
+    <net code="5" name="Net-(SHIELD1-Pad3V3)">
+      <node ref="SHIELD1" pin="3V3"/>
+    </net>
+    <net code="6" name="Net-(SHIELD1-PadAD4)">
+      <node ref="SHIELD1" pin="AD4"/>
+    </net>
+    <net code="7" name="Net-(SHIELD1-PadSP4)">
+      <node ref="SHIELD1" pin="SP4"/>
+    </net>
+    <net code="8" name="Net-(SHIELD1-PadAD5)">
+      <node ref="SHIELD1" pin="AD5"/>
+    </net>
+    <net code="9" name="Net-(SHIELD1-PadSP5)">
+      <node ref="SHIELD1" pin="SP5"/>
+    </net>
+    <net code="10" name="Net-(SHIELD1-PadSP6)">
+      <node ref="SHIELD1" pin="SP6"/>
+    </net>
+    <net code="11" name="Net-(SHIELD1-PadAD2)">
+      <node ref="SHIELD1" pin="AD2"/>
+    </net>
+    <net code="12" name="Net-(SHIELD1-PadSCL)">
+      <node ref="SHIELD1" pin="SCL"/>
+    </net>
+    <net code="13" name="Net-(SHIELD1-PadRST)">
+      <node ref="SHIELD1" pin="RST"/>
+    </net>
+    <net code="14" name="Net-(SHIELD1-PadGND1)">
+      <node ref="SHIELD1" pin="GND1"/>
+    </net>
+    <net code="15" name="Net-(SHIELD1-PadGND2)">
+      <node ref="SHIELD1" pin="GND2"/>
+    </net>
+    <net code="16" name="Net-(SHIELD1-PadGND3)">
+      <node ref="SHIELD1" pin="GND3"/>
+    </net>
+    <net code="17" name="Net-(SHIELD1-PadAREF)">
+      <node ref="SHIELD1" pin="AREF"/>
+    </net>
+    <net code="18" name="Net-(SHIELD1-PadV_IN)">
+      <node ref="SHIELD1" pin="V_IN"/>
+    </net>
+    <net code="19" name="Net-(SHIELD1-PadIO_R)">
+      <node ref="SHIELD1" pin="IO_R"/>
+    </net>
+    <net code="20" name="Net-(SHIELD1-Pad10)">
+      <node ref="SHIELD1" pin="10"/>
+    </net>
+    <net code="21" name="Net-(SHIELD1-Pad1)">
+      <node ref="SHIELD1" pin="1"/>
+    </net>
+    <net code="22" name="Net-(SHIELD1-Pad2)">
+      <node ref="SHIELD1" pin="2"/>
+    </net>
+    <net code="23" name="Net-(SHIELD1-Pad3)">
+      <node ref="SHIELD1" pin="3"/>
+    </net>
+    <net code="24" name="Net-(SHIELD1-Pad4)">
+      <node ref="SHIELD1" pin="4"/>
+    </net>
+    <net code="25" name="Net-(SHIELD1-Pad5)">
+      <node ref="SHIELD1" pin="5"/>
+    </net>
+    <net code="26" name="Net-(SHIELD1-Pad6)">
+      <node ref="SHIELD1" pin="6"/>
+    </net>
+    <net code="27" name="Net-(SHIELD1-Pad7)">
+      <node ref="SHIELD1" pin="7"/>
+    </net>
+    <net code="28" name="Net-(SHIELD1-Pad8)">
+      <node ref="SHIELD1" pin="8"/>
+    </net>
+    <net code="29" name="Net-(SHIELD1-Pad9)">
+      <node ref="SHIELD1" pin="9"/>
+    </net>
+    <net code="30" name="Net-(SHIELD1-Pad0)">
+      <node ref="SHIELD1" pin="0"/>
+    </net>
+    <net code="31" name="Net-(SHIELD1-Pad11)">
+      <node ref="SHIELD1" pin="11"/>
+    </net>
+    <net code="32" name="Net-(SHIELD1-Pad12)">
+      <node ref="SHIELD1" pin="12"/>
+    </net>
+    <net code="33" name="Net-(SHIELD1-Pad13)">
+      <node ref="SHIELD1" pin="13"/>
+    </net>
+    <net code="34" name="Net-(SHIELD1-PadNC)">
+      <node ref="SHIELD1" pin="NC"/>
+    </net>
+    <net code="35" name="Net-(SHIELD1-Pad5V)">
+      <node ref="SHIELD1" pin="5V"/>
+    </net>
+    <net code="36" name="Net-(SHIELD1-PadAD0)">
+      <node ref="SHIELD1" pin="AD0"/>
+    </net>
+    <net code="37" name="Net-(SHIELD1-PadAD1)">
+      <node ref="SHIELD1" pin="AD1"/>
+    </net>
+    <net code="38" name="Net-(SHIELD1-PadSP1)">
+      <node ref="SHIELD1" pin="SP1"/>
+    </net>
+  </nets>
+</export>
