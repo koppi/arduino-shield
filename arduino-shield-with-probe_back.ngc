@@ -17,14 +17,14 @@ o5 sub ( Bilinear interpolation macro )
 o5 endsub
 
 o6 sub ( Z-correction subroutine )
-    #3 = [ FIX[ [ #1 - 0.59868 ] / 5.10830 ] ] ( Lower left point X index )
-    #4 = [ FIX[ [ #2 - 0.83998 ] / 5.11371 ] ] ( Lower left point Y index )
+    #3 = [ FIX[ [ #1 - 0.64948 ] / 5.10105 ] ] ( Lower left point X index )
+    #4 = [ FIX[ [ #2 - 0.89078 ] / 5.10448 ] ] ( Lower left point Y index )
     #5 = [ #3 * 12 + [ #4 + 1 ] + 500 ] ( Upper left point parameter number )
     #6 = [ [ #3 + 1 ] *12 + [ #4 + 1 ] + 500 ] ( Upper right point parameter number )
     #7 = [ #3 * 12 + #4 + 500 ] ( Lower left point parameter number )
     #8 = [ [ #3 + 1 ] * 12 + #4 + 500 ] ( Lower right point parameter number )
-    #9 = [ [ #2 - 0.83998 - #4 * 5.11371 ] / 5.11371 ] ( Distance between the point and the left border of the rectangle, normalized to 1 )
-    #10 = [ [ #1 - 0.59868 - #3 * 5.10830 ] / 5.10830 ] ( Distance between the point and the down border of the rectangle, normalized to 1 ) 
+    #9 = [ [ #2 - 0.89078 - #4 * 5.10448 ] / 5.10448 ] ( Distance between the point and the left border of the rectangle, normalized to 1 )
+    #10 = [ [ #1 - 0.64948 - #3 * 5.10105 ] / 5.10105 ] ( Distance between the point and the down border of the rectangle, normalized to 1 ) 
     o5 call [##5] [##6] [##7] [##8] [#9] [#10]
 o6 endsub
 
@@ -35,7 +35,7 @@ o7 endsub
 
 o8 sub ( Y probe subroutine )
     G0 Z0.500 ( Move to probe height )
-    X[#110 * 5.10830 + 0.59868] Y[#111 * 5.11371 + 0.83998]  ( Move to the current probe point )
+    X[#110 * 5.10105 + 0.64948] Y[#111 * 5.10448 + 0.89078]  ( Move to the current probe point )
     G38.2 Z-5 F100 ( Probe it )
     #[#110 * 12 + #111 + 500] = #5063 ( Save the probe in the correct parameter )
     #111 = [#111 + #112] ( Increment/decrement by 1 the Y counter )
@@ -54,7 +54,7 @@ o9 endsub
 (MSG, Attach the probe tool)
 M0 ( Temporary machine stop. )
 G0 Z0.500 ( Move Z to safe height )
-G0 X0.59868 Y0.83998 ( Move XY to start point )
+G0 X0.64948 Y0.89078 ( Move XY to start point )
 G0 Z0.500 ( Move Z to probe height )
 (PROBEOPEN RawProbeLog.txt) ( Record all probes in RawProbeLog.txt )
 G38.2 Z-5 F100 ( Z-probe )
@@ -85,72 +85,71 @@ M3 ( Spindle on clockwise. )
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
-G00 X5.64820 Y55.64810 ( rapid move to begin. )
+G00 X5.74980 Y55.64810 ( rapid move to begin. )
 F300.00000
-o7 call [5.6482] [55.6481]
+o7 call [5.7498] [55.6481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
-o7 call [4.8354] [54.8607]
-o7 call [4.4544] [54.4289]
-o7 call [4.44593] [50.6443]
-o7 call [4.43747] [46.8597]
-o7 call [4.429] [43.0751]
-o7 call [1.9144] [40.5097]
-o7 call [1.91077] [35.7817]
-o7 call [1.90714] [31.0536]
-o7 call [1.90351] [26.3256]
-o7 call [1.89988] [21.5976]
-o7 call [1.89626] [16.8696]
-o7 call [1.89263] [12.1415]
-o7 call [1.889] [7.4135]
-o7 call [1.9398] [7.2611]
-o7 call [4.429] [4.7719]
-o7 call [4.429] [2.3335]
-o7 call [4.4798] [2.1811]
-o7 call [4.6322] [2.1303]
-o7 call [9.7122] [2.1303]
-o7 call [14.7922] [2.1303]
-o7 call [19.8722] [2.1303]
-o7 call [24.9522] [2.1303]
-o7 call [30.0322] [2.1303]
-o7 call [35.1122] [2.1303]
-o7 call [40.1922] [2.1303]
-o7 call [45.2722] [2.1303]
-o7 call [50.3522] [2.1303]
-o7 call [55.4322] [2.1303]
-o7 call [60.5122] [2.1303]
-o7 call [65.5922] [2.1303]
-o7 call [70.6722] [2.1303]
-o7 call [70.7992] [2.2065]
-o7 call [70.8015] [7.06714]
-o7 call [70.8038] [11.9278]
-o7 call [70.8061] [16.7884]
-o7 call [70.8084] [21.649]
-o7 call [70.8107] [26.5097]
-o7 call [70.8131] [31.3703]
-o7 call [70.8154] [36.231]
-o7 call [70.8177] [41.0916]
-o7 call [70.82] [45.9522]
-o7 call [70.8223] [50.8129]
-o7 call [70.8246] [55.6735]
-o7 call [70.7738] [55.6735]
-o7 call [70.7484] [55.7497]
-o7 call [70.596] [55.8005]
-o7 call [65.6117] [55.7985]
-o7 call [60.6275] [55.7966]
-o7 call [55.6432] [55.7946]
-o7 call [50.659] [55.7927]
-o7 call [45.6747] [55.7907]
-o7 call [40.6904] [55.7888]
-o7 call [35.7062] [55.7868]
-o7 call [30.7219] [55.7849]
-o7 call [25.7376] [55.7829]
-o7 call [20.7534] [55.781]
-o7 call [15.7691] [55.779]
-o7 call [10.7849] [55.7771]
-o7 call [5.8006] [55.7751]
-o7 call [5.699] [55.6735]
-o7 call [5.6482] [55.6735]
+o7 call [4.5306] [54.4543]
+o7 call [4.4798] [54.3019]
+o7 call [4.47133] [50.5173]
+o7 call [4.46287] [46.7327]
+o7 call [4.4544] [42.9481]
+o7 call [2.016] [40.5097]
+o7 call [1.9398] [40.3827]
+o7 call [1.9398] [35.6801]
+o7 call [1.9398] [30.9774]
+o7 call [1.9398] [26.2748]
+o7 call [1.9398] [21.5722]
+o7 call [1.9398] [16.8696]
+o7 call [1.9398] [12.1669]
+o7 call [1.9398] [7.4643]
+o7 call [1.9906] [7.3119]
+o7 call [4.4798] [4.8227]
+o7 call [4.4798] [2.3843]
+o7 call [4.5306] [2.2319]
+o7 call [4.683] [2.1811]
+o7 call [9.76104] [2.18305]
+o7 call [14.8391] [2.18501]
+o7 call [19.9171] [2.18696]
+o7 call [24.9952] [2.18892]
+o7 call [30.0732] [2.19087]
+o7 call [35.1513] [2.19282]
+o7 call [40.2293] [2.19478]
+o7 call [45.3074] [2.19673]
+o7 call [50.3854] [2.19869]
+o7 call [55.4635] [2.20064]
+o7 call [60.5415] [2.20259]
+o7 call [65.6196] [2.20455]
+o7 call [70.6976] [2.2065]
+o7 call [70.7738] [2.3335]
+o7 call [70.7738] [7.17336]
+o7 call [70.7738] [12.0132]
+o7 call [70.7738] [16.8531]
+o7 call [70.7738] [21.6929]
+o7 call [70.7738] [26.5328]
+o7 call [70.7738] [31.3726]
+o7 call [70.7738] [36.2125]
+o7 call [70.7738] [41.0523]
+o7 call [70.7738] [45.8922]
+o7 call [70.7738] [50.732]
+o7 call [70.7738] [55.5719]
+o7 call [70.6976] [55.6989]
+o7 call [70.5452] [55.7497]
+o7 call [65.5746] [55.7497]
+o7 call [60.604] [55.7497]
+o7 call [55.6334] [55.7497]
+o7 call [50.6629] [55.7497]
+o7 call [45.6923] [55.7497]
+o7 call [40.7217] [55.7497]
+o7 call [35.7511] [55.7497]
+o7 call [30.7805] [55.7497]
+o7 call [25.8099] [55.7497]
+o7 call [20.8394] [55.7497]
+o7 call [15.8688] [55.7497]
+o7 call [10.8982] [55.7497]
+o7 call [5.9276] [55.7497]
+o7 call [5.7498] [55.6735]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
