@@ -33,3 +33,5 @@ END.
 ### fabrication
 
 mill front.ngc, then drill.ngc, then outline.ngc.
+
+![Fabricated Arduino Shield](pics/20150609-001.jpg)
