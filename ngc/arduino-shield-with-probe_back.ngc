@@ -17,14 +17,14 @@ o5 sub ( Bilinear interpolation macro )
 o5 endsub
 
 o6 sub ( Z-correction subroutine )
-    #3 = [ FIX[ [ #1 - 1.69088 ] / 5.14956 ] ] ( Lower left point X index )
-    #4 = [ FIX[ [ #2 - 4.82778 ] / 5.21106 ] ] ( Lower left point Y index )
-    #5 = [ #3 * 11 + [ #4 + 1 ] + 500 ] ( Upper left point parameter number )
-    #6 = [ [ #3 + 1 ] *11 + [ #4 + 1 ] + 500 ] ( Upper right point parameter number )
-    #7 = [ #3 * 11 + #4 + 500 ] ( Lower left point parameter number )
-    #8 = [ [ #3 + 1 ] * 11 + #4 + 500 ] ( Lower right point parameter number )
-    #9 = [ [ #2 - 4.82778 - #4 * 5.21106 ] / 5.21106 ] ( Distance between the point and the left border of the rectangle, normalized to 1 )
-    #10 = [ [ #1 - 1.69088 - #3 * 5.14956 ] / 5.14956 ] ( Distance between the point and the down border of the rectangle, normalized to 1 ) 
+    #3 = [ FIX[ [ #1 - 1.05588 ] / 5.04299 ] ] ( Lower left point X index )
+    #4 = [ FIX[ [ #2 - 1.29718 ] / 5.03289 ] ] ( Lower left point Y index )
+    #5 = [ #3 * 12 + [ #4 + 1 ] + 500 ] ( Upper left point parameter number )
+    #6 = [ [ #3 + 1 ] *12 + [ #4 + 1 ] + 500 ] ( Upper right point parameter number )
+    #7 = [ #3 * 12 + #4 + 500 ] ( Lower left point parameter number )
+    #8 = [ [ #3 + 1 ] * 12 + #4 + 500 ] ( Lower right point parameter number )
+    #9 = [ [ #2 - 1.29718 - #4 * 5.03289 ] / 5.03289 ] ( Distance between the point and the left border of the rectangle, normalized to 1 )
+    #10 = [ [ #1 - 1.05588 - #3 * 5.04299 ] / 5.04299 ] ( Distance between the point and the down border of the rectangle, normalized to 1 ) 
     o5 call [##5] [##6] [##7] [##8] [#9] [#10]
 o6 endsub
 
@@ -35,9 +35,9 @@ o7 endsub
 
 o8 sub ( Y probe subroutine )
     G0 Z0.500 ( Move to probe height )
-    X[#110 * 5.14956 + 1.69088] Y[#111 * 5.21106 + 4.82778]  ( Move to the current probe point )
+    X[#110 * 5.04299 + 1.05588] Y[#111 * 5.03289 + 1.29718]  ( Move to the current probe point )
     G38.2 Z-5 F100 ( Probe it )
-    #[#110 * 11 + #111 + 500] = #5063 ( Save the probe in the correct parameter )
+    #[#110 * 12 + #111 + 500] = #5063 ( Save the probe in the correct parameter )
     #111 = [#111 + #112] ( Increment/decrement by 1 the Y counter )
 o8 endsub
 
@@ -45,7 +45,7 @@ o9 sub ( X probe subroutine )
     o10 repeat [#113]
         o8 call
     o10 endrepeat
-    #113 = 11
+    #113 = 12
     #112 = [0 - #112]
     #111 = [#111 + #112]
     #110 = [#110 + 1] ( Increment by 1 the X counter )
@@ -54,7 +54,7 @@ o9 endsub
 (MSG, Attach the probe tool)
 M0 ( Temporary machine stop. )
 G0 Z0.500 ( Move Z to safe height )
-G0 X1.69088 Y4.82778 ( Move XY to start point )
+G0 X1.05588 Y1.29718 ( Move XY to start point )
 G0 Z0.500 ( Move Z to probe height )
 (PROBEOPEN RawProbeLog.txt) ( Record all probes in RawProbeLog.txt )
 G38.2 Z-5 F100 ( Z-probe )
@@ -63,14 +63,14 @@ G10 L20 P0 Z0 ( Set the current Z as zero-value )
 
 ( We now start the real probing: move the Z axis to the probing height, move to )
 ( the probing XY position, probe it and save the result, parameter #5063, )
-( in a numbered parameter; we will make 14 probes on the X-axis and )
-( 11 probes on the Y-axis, for a grand total of 154 probes )
+( in a numbered parameter; we will make 15 probes on the X-axis and )
+( 12 probes on the Y-axis, for a grand total of 180 probes )
 
 #110 = 0 ( X iterator )
 #111 = 1 ( Y iterator )
 #112 = 1 ( UP or DOWN increment )
-#113 = 10 ( number of Y points; the 1st Y row can be done one time less )
-o11 repeat [14]
+#113 = 11 ( number of Y points; the 1st Y row can be done one time less )
+o11 repeat [15]
     o9 call
 o11 endrepeat
 
@@ -85,11 +85,66 @@ M3 ( Spindle on clockwise. )
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
-G00 X5.74980 Y55.64810 ( rapid move to begin. )
+G00 X6.28320 Y55.34330 ( rapid move to begin. )
 F300.00000
-o7 call [5.7498] [55.6481]
+o7 call [6.2832] [55.3433]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [5.4704] [54.5559]
+o7 call [4.8862] [53.9209]
+o7 call [4.8862] [50.1278]
+o7 call [4.8862] [46.3348]
+o7 call [4.8862] [42.5417]
+o7 call [2.3462] [40.0017]
+o7 call [2.3462] [35.4007]
+o7 call [2.3462] [30.7996]
+o7 call [2.3462] [26.1986]
+o7 call [2.3462] [21.5976]
+o7 call [2.3462] [16.9966]
+o7 call [2.3462] [12.3955]
+o7 call [2.3462] [7.7945]
+o7 call [4.8862] [5.2545]
+o7 call [4.8862] [2.7145]
+o7 call [4.9878] [2.6129]
+o7 call [10.0033] [2.61095]
+o7 call [15.0188] [2.60899]
+o7 call [20.0344] [2.60704]
+o7 call [25.0499] [2.60509]
+o7 call [30.0654] [2.60313]
+o7 call [35.0809] [2.60118]
+o7 call [40.0965] [2.59922]
+o7 call [45.112] [2.59727]
+o7 call [50.1275] [2.59532]
+o7 call [55.143] [2.59336]
+o7 call [60.1586] [2.59141]
+o7 call [65.1741] [2.58945]
+o7 call [70.1896] [2.5875]
+o7 call [70.3674] [2.7145]
+o7 call [70.3674] [7.4897]
+o7 call [70.3674] [12.2649]
+o7 call [70.3674] [17.0401]
+o7 call [70.3674] [21.8153]
+o7 call [70.3674] [26.5905]
+o7 call [70.3674] [31.3657]
+o7 call [70.3674] [36.1409]
+o7 call [70.3674] [40.9161]
+o7 call [70.3674] [45.6913]
+o7 call [70.3674] [50.4665]
+o7 call [70.3674] [55.2417]
+o7 call [70.2658] [55.3433]
+o7 call [65.3441] [55.3453]
+o7 call [60.4223] [55.3472]
+o7 call [55.5006] [55.3492]
+o7 call [50.5788] [55.3511]
+o7 call [45.6571] [55.3531]
+o7 call [40.7354] [55.355]
+o7 call [35.8136] [55.357]
+o7 call [30.8919] [55.3589]
+o7 call [25.9702] [55.3609]
+o7 call [21.0484] [55.3628]
+o7 call [16.1267] [55.3648]
+o7 call [11.2049] [55.3667]
+o7 call [6.2832] [55.3687]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -98,6 +153,35 @@ F300.00000
 o7 call [50.8602] [54.3781]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [50.7078] [54.1495]
+o7 call [50.5808] [54.0733]
+o7 call [50.6062] [52.1683]
+o7 call [50.7332] [52.0921]
+o7 call [50.9618] [51.7111]
+o7 call [51.3174] [51.4571]
+o7 call [51.9778] [51.3555]
+o7 call [52.308] [51.4317]
+o7 call [52.7906] [51.7619]
+o7 call [53.0192] [52.1429]
+o7 call [53.07] [52.4985]
+o7 call [53.1716] [52.7017]
+o7 call [53.2732] [52.7017]
+o7 call [53.3748] [52.6001]
+o7 call [53.4764] [52.3969]
+o7 call [53.6288] [52.3969]
+o7 call [53.6288] [53.8701]
+o7 call [53.451] [53.8447]
+o7 call [53.4002] [53.6923]
+o7 call [53.2986] [53.5907]
+o7 call [53.1462] [53.5907]
+o7 call [53.0954] [53.6415]
+o7 call [53.0446] [53.9971]
+o7 call [52.7652] [54.5305]
+o7 call [52.2826] [54.8607]
+o7 call [51.927] [54.9115]
+o7 call [51.419] [54.8607]
+o7 call [50.9364] [54.5305]
+o7 call [50.8602] [54.4035]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -106,6 +190,24 @@ F300.00000
 o7 call [48.3202] [54.3781]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [48.1678] [54.1495]
+o7 call [48.0408] [54.0733]
+o7 call [48.0662] [52.1683]
+o7 call [48.1932] [52.0921]
+o7 call [48.4218] [51.7111]
+o7 call [48.7774] [51.4571]
+o7 call [49.4378] [51.3555]
+o7 call [49.768] [51.4317]
+o7 call [50.2506] [51.7619]
+o7 call [50.5808] [52.2445]
+o7 call [50.5808] [54.0733]
+o7 call [50.3776] [54.2765]
+o7 call [50.2252] [54.5305]
+o7 call [49.7426] [54.8607]
+o7 call [49.387] [54.9115]
+o7 call [48.879] [54.8607]
+o7 call [48.3964] [54.5305]
+o7 call [48.3202] [54.4035]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -114,6 +216,24 @@ F300.00000
 o7 call [45.7802] [54.3781]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [45.6278] [54.1495]
+o7 call [45.5008] [54.0733]
+o7 call [45.5262] [52.1683]
+o7 call [45.6532] [52.0921]
+o7 call [45.8818] [51.7111]
+o7 call [46.2374] [51.4571]
+o7 call [46.8978] [51.3555]
+o7 call [47.228] [51.4317]
+o7 call [47.7106] [51.7619]
+o7 call [48.0408] [52.2445]
+o7 call [48.0408] [54.0733]
+o7 call [47.8376] [54.2765]
+o7 call [47.6852] [54.5305]
+o7 call [47.2026] [54.8607]
+o7 call [46.847] [54.9115]
+o7 call [46.339] [54.8607]
+o7 call [45.8564] [54.5305]
+o7 call [45.7802] [54.4035]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -122,6 +242,24 @@ F300.00000
 o7 call [43.2402] [54.3781]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [43.0878] [54.1495]
+o7 call [42.9608] [54.0733]
+o7 call [42.9862] [52.1683]
+o7 call [43.1132] [52.0921]
+o7 call [43.3418] [51.7111]
+o7 call [43.6974] [51.4571]
+o7 call [44.3578] [51.3555]
+o7 call [44.688] [51.4317]
+o7 call [45.1706] [51.7619]
+o7 call [45.5008] [52.2445]
+o7 call [45.5008] [54.0733]
+o7 call [45.2976] [54.2765]
+o7 call [45.1452] [54.5305]
+o7 call [44.6626] [54.8607]
+o7 call [44.307] [54.9115]
+o7 call [43.799] [54.8607]
+o7 call [43.3164] [54.5305]
+o7 call [43.2402] [54.4035]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -130,6 +268,24 @@ F300.00000
 o7 call [40.7002] [54.3781]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [40.5478] [54.1495]
+o7 call [40.4208] [54.0733]
+o7 call [40.4462] [52.1683]
+o7 call [40.5732] [52.0921]
+o7 call [40.8018] [51.7111]
+o7 call [41.1574] [51.4571]
+o7 call [41.8178] [51.3555]
+o7 call [42.148] [51.4317]
+o7 call [42.6306] [51.7619]
+o7 call [42.9608] [52.2445]
+o7 call [42.9608] [54.0733]
+o7 call [42.7576] [54.2765]
+o7 call [42.6052] [54.5305]
+o7 call [42.1226] [54.8607]
+o7 call [41.767] [54.9115]
+o7 call [41.259] [54.8607]
+o7 call [40.7764] [54.5305]
+o7 call [40.7002] [54.4035]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -138,6 +294,24 @@ F300.00000
 o7 call [38.1602] [54.3781]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [38.0078] [54.1495]
+o7 call [37.8808] [54.0733]
+o7 call [37.9062] [52.1683]
+o7 call [38.0332] [52.0921]
+o7 call [38.2618] [51.7111]
+o7 call [38.6174] [51.4571]
+o7 call [39.2778] [51.3555]
+o7 call [39.608] [51.4317]
+o7 call [40.0906] [51.7619]
+o7 call [40.4208] [52.2445]
+o7 call [40.4208] [54.0733]
+o7 call [40.2176] [54.2765]
+o7 call [40.0652] [54.5305]
+o7 call [39.5826] [54.8607]
+o7 call [39.227] [54.9115]
+o7 call [38.719] [54.8607]
+o7 call [38.2364] [54.5305]
+o7 call [38.1602] [54.4035]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -146,6 +320,24 @@ F300.00000
 o7 call [35.6202] [54.3781]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [35.4678] [54.1495]
+o7 call [35.3408] [54.0733]
+o7 call [35.3662] [52.1683]
+o7 call [35.4932] [52.0921]
+o7 call [35.7218] [51.7111]
+o7 call [36.0774] [51.4571]
+o7 call [36.7378] [51.3555]
+o7 call [37.068] [51.4317]
+o7 call [37.5506] [51.7619]
+o7 call [37.8808] [52.2445]
+o7 call [37.8808] [54.0733]
+o7 call [37.6776] [54.2765]
+o7 call [37.5252] [54.5305]
+o7 call [37.0426] [54.8607]
+o7 call [36.687] [54.9115]
+o7 call [36.179] [54.8607]
+o7 call [35.6964] [54.5305]
+o7 call [35.6202] [54.4035]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -154,6 +346,24 @@ F300.00000
 o7 call [33.0802] [54.3781]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [32.9278] [54.1495]
+o7 call [32.8008] [54.0733]
+o7 call [32.8262] [52.1683]
+o7 call [32.9532] [52.0921]
+o7 call [33.1818] [51.7111]
+o7 call [33.5374] [51.4571]
+o7 call [34.1978] [51.3555]
+o7 call [34.528] [51.4317]
+o7 call [35.0106] [51.7619]
+o7 call [35.3408] [52.2445]
+o7 call [35.3408] [54.0733]
+o7 call [35.1376] [54.2765]
+o7 call [34.9852] [54.5305]
+o7 call [34.5026] [54.8607]
+o7 call [34.147] [54.9115]
+o7 call [33.639] [54.8607]
+o7 call [33.1564] [54.5305]
+o7 call [33.0802] [54.4035]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -162,6 +372,24 @@ F300.00000
 o7 call [30.5402] [54.3781]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [30.3878] [54.1495]
+o7 call [30.2608] [54.0733]
+o7 call [30.2862] [52.1683]
+o7 call [30.4132] [52.0921]
+o7 call [30.6418] [51.7111]
+o7 call [30.9974] [51.4571]
+o7 call [31.6578] [51.3555]
+o7 call [31.988] [51.4317]
+o7 call [32.4706] [51.7619]
+o7 call [32.8008] [52.2445]
+o7 call [32.8008] [54.0733]
+o7 call [32.5976] [54.2765]
+o7 call [32.4452] [54.5305]
+o7 call [31.9626] [54.8607]
+o7 call [31.607] [54.9115]
+o7 call [31.099] [54.8607]
+o7 call [30.6164] [54.5305]
+o7 call [30.5402] [54.4035]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -170,6 +398,24 @@ F300.00000
 o7 call [28.0002] [54.3781]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [27.8478] [54.1495]
+o7 call [27.7716] [53.8193]
+o7 call [27.7462] [52.6255]
+o7 call [27.797] [52.2699]
+o7 call [28.0764] [51.7365]
+o7 call [28.559] [51.4063]
+o7 call [28.9146] [51.3555]
+o7 call [29.4226] [51.4063]
+o7 call [29.9052] [51.7365]
+o7 call [30.0576] [51.9905]
+o7 call [30.2608] [52.1937]
+o7 call [30.2608] [54.0225]
+o7 call [29.9306] [54.5051]
+o7 call [29.448] [54.8353]
+o7 call [29.1178] [54.9115]
+o7 call [28.4574] [54.8099]
+o7 call [28.1018] [54.5559]
+o7 call [28.0002] [54.4035]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -178,6 +424,25 @@ F300.00000
 o7 call [23.9362] [54.3781]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [23.7838] [54.1495]
+o7 call [23.6568] [54.0733]
+o7 call [23.6822] [52.1683]
+o7 call [23.8092] [52.0921]
+o7 call [24.0378] [51.7111]
+o7 call [24.3934] [51.4571]
+o7 call [25.0538] [51.3555]
+o7 call [25.384] [51.4317]
+o7 call [25.8666] [51.7619]
+o7 call [26.0952] [52.1429]
+o7 call [26.1714] [52.4731]
+o7 call [26.1968] [53.6669]
+o7 call [26.1206] [53.9971]
+o7 call [25.8412] [54.5305]
+o7 call [25.3586] [54.8607]
+o7 call [25.003] [54.9115]
+o7 call [24.495] [54.8607]
+o7 call [24.0124] [54.5305]
+o7 call [23.9362] [54.4035]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -186,6 +451,24 @@ F300.00000
 o7 call [21.3962] [54.3781]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [21.2438] [54.1495]
+o7 call [21.1168] [54.0733]
+o7 call [21.1422] [52.1683]
+o7 call [21.2692] [52.0921]
+o7 call [21.4978] [51.7111]
+o7 call [21.8534] [51.4571]
+o7 call [22.5138] [51.3555]
+o7 call [22.844] [51.4317]
+o7 call [23.3266] [51.7619]
+o7 call [23.6568] [52.2445]
+o7 call [23.6568] [54.0733]
+o7 call [23.4536] [54.2765]
+o7 call [23.3012] [54.5305]
+o7 call [22.8186] [54.8607]
+o7 call [22.463] [54.9115]
+o7 call [21.955] [54.8607]
+o7 call [21.4724] [54.5305]
+o7 call [21.3962] [54.4035]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -194,6 +477,24 @@ F300.00000
 o7 call [18.8562] [54.3781]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [18.7038] [54.1495]
+o7 call [18.5768] [54.0733]
+o7 call [18.6022] [52.1683]
+o7 call [18.7292] [52.0921]
+o7 call [18.9578] [51.7111]
+o7 call [19.3134] [51.4571]
+o7 call [19.9738] [51.3555]
+o7 call [20.304] [51.4317]
+o7 call [20.7866] [51.7619]
+o7 call [21.1168] [52.2445]
+o7 call [21.1168] [54.0733]
+o7 call [20.9136] [54.2765]
+o7 call [20.7612] [54.5305]
+o7 call [20.2786] [54.8607]
+o7 call [19.923] [54.9115]
+o7 call [19.415] [54.8607]
+o7 call [18.9324] [54.5305]
+o7 call [18.8562] [54.4035]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -202,6 +503,24 @@ F300.00000
 o7 call [16.3162] [54.3781]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [16.1638] [54.1495]
+o7 call [16.0368] [54.0733]
+o7 call [16.0622] [52.1683]
+o7 call [16.1892] [52.0921]
+o7 call [16.4178] [51.7111]
+o7 call [16.7734] [51.4571]
+o7 call [17.4338] [51.3555]
+o7 call [17.764] [51.4317]
+o7 call [18.2466] [51.7619]
+o7 call [18.5768] [52.2445]
+o7 call [18.5768] [54.0733]
+o7 call [18.3736] [54.2765]
+o7 call [18.2212] [54.5305]
+o7 call [17.7386] [54.8607]
+o7 call [17.383] [54.9115]
+o7 call [16.875] [54.8607]
+o7 call [16.3924] [54.5305]
+o7 call [16.3162] [54.4035]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -210,6 +529,24 @@ F300.00000
 o7 call [13.7762] [54.3781]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [13.6238] [54.1495]
+o7 call [13.4968] [54.0733]
+o7 call [13.5222] [52.1683]
+o7 call [13.6492] [52.0921]
+o7 call [13.8778] [51.7111]
+o7 call [14.2334] [51.4571]
+o7 call [14.8938] [51.3555]
+o7 call [15.224] [51.4317]
+o7 call [15.7066] [51.7619]
+o7 call [16.0368] [52.2445]
+o7 call [16.0368] [54.0733]
+o7 call [15.8336] [54.2765]
+o7 call [15.6812] [54.5305]
+o7 call [15.1986] [54.8607]
+o7 call [14.843] [54.9115]
+o7 call [14.335] [54.8607]
+o7 call [13.8524] [54.5305]
+o7 call [13.7762] [54.4035]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -218,6 +555,24 @@ F300.00000
 o7 call [11.2362] [54.3781]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [11.0838] [54.1495]
+o7 call [10.9568] [54.0733]
+o7 call [10.9822] [52.1683]
+o7 call [11.1092] [52.0921]
+o7 call [11.3378] [51.7111]
+o7 call [11.6934] [51.4571]
+o7 call [12.3538] [51.3555]
+o7 call [12.684] [51.4317]
+o7 call [13.1666] [51.7619]
+o7 call [13.4968] [52.2445]
+o7 call [13.4968] [54.0733]
+o7 call [13.2936] [54.2765]
+o7 call [13.1412] [54.5305]
+o7 call [12.6586] [54.8607]
+o7 call [12.303] [54.9115]
+o7 call [11.795] [54.8607]
+o7 call [11.3124] [54.5305]
+o7 call [11.2362] [54.4035]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -226,6 +581,24 @@ F300.00000
 o7 call [8.6962] [54.3781]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [8.5438] [54.1495]
+o7 call [8.4168] [54.0733]
+o7 call [8.4422] [52.1683]
+o7 call [8.5692] [52.0921]
+o7 call [8.7978] [51.7111]
+o7 call [9.1534] [51.4571]
+o7 call [9.8138] [51.3555]
+o7 call [10.144] [51.4317]
+o7 call [10.6266] [51.7619]
+o7 call [10.9568] [52.2445]
+o7 call [10.9568] [54.0733]
+o7 call [10.7536] [54.2765]
+o7 call [10.6012] [54.5305]
+o7 call [10.1186] [54.8607]
+o7 call [9.763] [54.9115]
+o7 call [9.255] [54.8607]
+o7 call [8.7724] [54.5305]
+o7 call [8.6962] [54.4035]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -234,6 +607,24 @@ F300.00000
 o7 call [6.1562] [54.3781]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [6.0038] [54.1495]
+o7 call [5.9276] [53.8193]
+o7 call [5.9022] [52.6255]
+o7 call [5.953] [52.2699]
+o7 call [6.2324] [51.7365]
+o7 call [6.715] [51.4063]
+o7 call [7.0706] [51.3555]
+o7 call [7.5786] [51.4063]
+o7 call [8.0612] [51.7365]
+o7 call [8.2136] [51.9905]
+o7 call [8.4168] [52.1937]
+o7 call [8.4168] [54.0225]
+o7 call [8.0866] [54.5051]
+o7 call [7.604] [54.8353]
+o7 call [7.2738] [54.9115]
+o7 call [6.6134] [54.8099]
+o7 call [6.2578] [54.5559]
+o7 call [6.1562] [54.4035]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -242,6 +633,22 @@ F300.00000
 o7 call [67.3448] [50.0855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [67.2178] [49.9331]
+o7 call [67.0908] [49.8569]
+o7 call [67.0908] [48.0281]
+o7 call [68.9196] [48.0281]
+o7 call [69.0974] [48.2567]
+o7 call [69.326] [48.4345]
+o7 call [69.5038] [48.6631]
+o7 call [69.6562] [49.1203]
+o7 call [69.6562] [49.5267]
+o7 call [69.5546] [49.8315]
+o7 call [69.4022] [50.0855]
+o7 call [68.9704] [50.4665]
+o7 call [68.691] [50.5935]
+o7 call [68.1068] [50.6189]
+o7 call [67.675] [50.4411]
+o7 call [67.3702] [50.1363]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -250,6 +657,19 @@ F300.00000
 o7 call [64.8048] [50.0855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [64.627] [49.8823]
+o7 call [64.5508] [49.8569]
+o7 call [64.5508] [48.0281]
+o7 call [67.0908] [48.0281]
+o7 call [67.0908] [49.8569]
+o7 call [66.9638] [49.9331]
+o7 call [66.5828] [50.3649]
+o7 call [66.3288] [50.5173]
+o7 call [66.024] [50.6189]
+o7 call [65.6176] [50.6189]
+o7 call [65.3128] [50.5173]
+o7 call [65.0588] [50.3649]
+o7 call [64.8048] [50.1109]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -258,6 +678,19 @@ F300.00000
 o7 call [62.2648] [50.0855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [62.087] [49.8823]
+o7 call [62.0108] [49.8569]
+o7 call [62.0108] [48.0281]
+o7 call [64.5508] [48.0281]
+o7 call [64.5508] [49.8569]
+o7 call [64.4238] [49.9331]
+o7 call [64.0428] [50.3649]
+o7 call [63.7888] [50.5173]
+o7 call [63.484] [50.6189]
+o7 call [63.0776] [50.6189]
+o7 call [62.7728] [50.5173]
+o7 call [62.5188] [50.3649]
+o7 call [62.2648] [50.1109]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -266,6 +699,19 @@ F300.00000
 o7 call [59.7248] [50.0855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [59.5978] [49.9331]
+o7 call [59.4708] [49.8569]
+o7 call [59.4708] [48.0281]
+o7 call [62.0108] [48.0281]
+o7 call [62.0108] [49.8569]
+o7 call [61.8838] [49.9331]
+o7 call [61.5028] [50.3649]
+o7 call [61.2488] [50.5173]
+o7 call [60.944] [50.6189]
+o7 call [60.5376] [50.6189]
+o7 call [60.2328] [50.5173]
+o7 call [59.9788] [50.3649]
+o7 call [59.7248] [50.1109]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -274,6 +720,19 @@ F300.00000
 o7 call [57.1848] [50.0855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [57.0578] [49.9331]
+o7 call [56.9308] [49.8569]
+o7 call [56.9308] [48.0281]
+o7 call [59.4708] [48.0281]
+o7 call [59.4708] [49.8569]
+o7 call [59.3438] [49.9331]
+o7 call [58.9628] [50.3649]
+o7 call [58.7088] [50.5173]
+o7 call [58.404] [50.6189]
+o7 call [57.9976] [50.6189]
+o7 call [57.6928] [50.5173]
+o7 call [57.4388] [50.3649]
+o7 call [57.1848] [50.1109]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -282,6 +741,19 @@ F300.00000
 o7 call [54.6448] [50.0855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [54.467] [49.8823]
+o7 call [54.3908] [49.8569]
+o7 call [54.3908] [48.0281]
+o7 call [56.9308] [48.0281]
+o7 call [56.9308] [49.8569]
+o7 call [56.8038] [49.9331]
+o7 call [56.4228] [50.3649]
+o7 call [56.1688] [50.5173]
+o7 call [55.864] [50.6189]
+o7 call [55.4576] [50.6189]
+o7 call [55.1528] [50.5173]
+o7 call [54.8988] [50.3649]
+o7 call [54.6448] [50.1109]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -290,6 +762,19 @@ F300.00000
 o7 call [52.1048] [50.0855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [51.9778] [49.9331]
+o7 call [51.8508] [49.8569]
+o7 call [51.8508] [48.0281]
+o7 call [54.3908] [48.0281]
+o7 call [54.3908] [49.8569]
+o7 call [54.2638] [49.9331]
+o7 call [53.8828] [50.3649]
+o7 call [53.6288] [50.5173]
+o7 call [53.324] [50.6189]
+o7 call [52.9176] [50.6189]
+o7 call [52.6128] [50.5173]
+o7 call [52.3588] [50.3649]
+o7 call [52.1048] [50.1109]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -298,6 +783,19 @@ F300.00000
 o7 call [49.5648] [50.0855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [49.387] [49.8823]
+o7 call [49.3108] [49.8569]
+o7 call [49.3108] [48.0281]
+o7 call [51.8508] [48.0281]
+o7 call [51.8508] [49.8569]
+o7 call [51.7238] [49.9331]
+o7 call [51.3428] [50.3649]
+o7 call [51.0888] [50.5173]
+o7 call [50.784] [50.6189]
+o7 call [50.3776] [50.6189]
+o7 call [50.0728] [50.5173]
+o7 call [49.8188] [50.3649]
+o7 call [49.5648] [50.1109]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -306,6 +804,19 @@ F300.00000
 o7 call [47.0248] [50.0855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [46.8978] [49.9331]
+o7 call [46.7708] [49.8569]
+o7 call [46.7708] [48.0281]
+o7 call [49.3108] [48.0281]
+o7 call [49.3108] [49.8569]
+o7 call [49.1838] [49.9331]
+o7 call [48.8028] [50.3649]
+o7 call [48.5488] [50.5173]
+o7 call [48.244] [50.6189]
+o7 call [47.8376] [50.6189]
+o7 call [47.5328] [50.5173]
+o7 call [47.2788] [50.3649]
+o7 call [47.0248] [50.1109]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -314,6 +825,19 @@ F300.00000
 o7 call [44.4848] [50.0855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [44.3578] [49.9331]
+o7 call [44.2308] [49.8569]
+o7 call [44.2308] [48.0281]
+o7 call [46.7708] [48.0281]
+o7 call [46.7708] [49.8569]
+o7 call [46.6438] [49.9331]
+o7 call [46.2628] [50.3649]
+o7 call [46.0088] [50.5173]
+o7 call [45.704] [50.6189]
+o7 call [45.2976] [50.6189]
+o7 call [44.9928] [50.5173]
+o7 call [44.7388] [50.3649]
+o7 call [44.4848] [50.1109]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -322,6 +846,19 @@ F300.00000
 o7 call [41.9448] [50.0855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [41.8178] [49.9331]
+o7 call [41.6908] [49.8569]
+o7 call [41.6908] [48.0281]
+o7 call [44.2308] [48.0281]
+o7 call [44.2308] [49.8569]
+o7 call [44.1038] [49.9331]
+o7 call [43.7228] [50.3649]
+o7 call [43.4688] [50.5173]
+o7 call [43.164] [50.6189]
+o7 call [42.7576] [50.6189]
+o7 call [42.4528] [50.5173]
+o7 call [42.1988] [50.3649]
+o7 call [41.9448] [50.1109]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -330,6 +867,19 @@ F300.00000
 o7 call [39.4048] [50.0855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [39.2778] [49.9331]
+o7 call [39.1508] [49.8569]
+o7 call [39.1508] [48.0281]
+o7 call [41.6908] [48.0281]
+o7 call [41.6908] [49.8569]
+o7 call [41.5638] [49.9331]
+o7 call [41.1828] [50.3649]
+o7 call [40.9288] [50.5173]
+o7 call [40.624] [50.6189]
+o7 call [40.2176] [50.6189]
+o7 call [39.9128] [50.5173]
+o7 call [39.6588] [50.3649]
+o7 call [39.4048] [50.1109]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -338,6 +888,19 @@ F300.00000
 o7 call [36.8648] [50.0855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [36.7378] [49.9331]
+o7 call [36.6108] [49.8569]
+o7 call [36.6108] [48.0281]
+o7 call [39.1508] [48.0281]
+o7 call [39.1508] [49.8569]
+o7 call [39.0238] [49.9331]
+o7 call [38.6428] [50.3649]
+o7 call [38.3888] [50.5173]
+o7 call [38.084] [50.6189]
+o7 call [37.6776] [50.6189]
+o7 call [37.3728] [50.5173]
+o7 call [37.1188] [50.3649]
+o7 call [36.8648] [50.1109]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -346,6 +909,19 @@ F300.00000
 o7 call [34.3248] [50.0855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [34.1978] [49.9331]
+o7 call [34.0708] [49.8569]
+o7 call [34.0708] [48.0281]
+o7 call [36.6108] [48.0281]
+o7 call [36.6108] [49.8569]
+o7 call [36.4838] [49.9331]
+o7 call [36.1028] [50.3649]
+o7 call [35.8488] [50.5173]
+o7 call [35.544] [50.6189]
+o7 call [35.1376] [50.6189]
+o7 call [34.8328] [50.5173]
+o7 call [34.5788] [50.3649]
+o7 call [34.3248] [50.1109]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -354,6 +930,19 @@ F300.00000
 o7 call [31.7848] [50.0855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [31.6578] [49.9331]
+o7 call [31.5308] [49.8569]
+o7 call [31.5308] [48.0281]
+o7 call [34.0708] [48.0281]
+o7 call [34.0708] [49.8569]
+o7 call [33.9438] [49.9331]
+o7 call [33.5628] [50.3649]
+o7 call [33.3088] [50.5173]
+o7 call [33.004] [50.6189]
+o7 call [32.5976] [50.6189]
+o7 call [32.2928] [50.5173]
+o7 call [32.0388] [50.3649]
+o7 call [31.7848] [50.1109]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -362,6 +951,19 @@ F300.00000
 o7 call [29.2448] [50.0855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [29.1178] [49.9331]
+o7 call [28.9908] [49.8569]
+o7 call [28.9908] [48.0281]
+o7 call [31.5308] [48.0281]
+o7 call [31.5308] [49.8569]
+o7 call [31.4038] [49.9331]
+o7 call [31.0228] [50.3649]
+o7 call [30.7688] [50.5173]
+o7 call [30.464] [50.6189]
+o7 call [30.0576] [50.6189]
+o7 call [29.7528] [50.5173]
+o7 call [29.4988] [50.3649]
+o7 call [29.2448] [50.1109]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -370,6 +972,19 @@ F300.00000
 o7 call [26.7048] [50.0855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [26.5778] [49.9331]
+o7 call [26.4508] [49.8569]
+o7 call [26.4508] [48.0281]
+o7 call [28.9908] [48.0281]
+o7 call [28.9908] [49.8569]
+o7 call [28.8638] [49.9331]
+o7 call [28.4828] [50.3649]
+o7 call [28.2288] [50.5173]
+o7 call [27.924] [50.6189]
+o7 call [27.5176] [50.6189]
+o7 call [27.2128] [50.5173]
+o7 call [26.9588] [50.3649]
+o7 call [26.7048] [50.1109]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -378,6 +993,19 @@ F300.00000
 o7 call [24.1648] [50.0855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [24.0378] [49.9331]
+o7 call [23.9108] [49.8569]
+o7 call [23.9108] [48.0281]
+o7 call [26.4508] [48.0281]
+o7 call [26.4508] [49.8569]
+o7 call [26.3238] [49.9331]
+o7 call [25.9428] [50.3649]
+o7 call [25.6888] [50.5173]
+o7 call [25.384] [50.6189]
+o7 call [24.9776] [50.6189]
+o7 call [24.6728] [50.5173]
+o7 call [24.4188] [50.3649]
+o7 call [24.1648] [50.1109]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -386,6 +1014,19 @@ F300.00000
 o7 call [21.6248] [50.0855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [21.4978] [49.9331]
+o7 call [21.3708] [49.8569]
+o7 call [21.3708] [48.0281]
+o7 call [23.9108] [48.0281]
+o7 call [23.9108] [49.8569]
+o7 call [23.7838] [49.9331]
+o7 call [23.4028] [50.3649]
+o7 call [23.1488] [50.5173]
+o7 call [22.844] [50.6189]
+o7 call [22.4376] [50.6189]
+o7 call [22.1328] [50.5173]
+o7 call [21.8788] [50.3649]
+o7 call [21.6248] [50.1109]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -394,6 +1035,19 @@ F300.00000
 o7 call [19.0848] [50.0855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [18.9578] [49.9331]
+o7 call [18.8308] [49.8569]
+o7 call [18.8308] [48.0281]
+o7 call [21.3708] [48.0281]
+o7 call [21.3708] [49.8569]
+o7 call [21.2438] [49.9331]
+o7 call [20.8628] [50.3649]
+o7 call [20.6088] [50.5173]
+o7 call [20.304] [50.6189]
+o7 call [19.8976] [50.6189]
+o7 call [19.5928] [50.5173]
+o7 call [19.3388] [50.3649]
+o7 call [19.0848] [50.1109]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -402,6 +1056,19 @@ F300.00000
 o7 call [16.5448] [50.0855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [16.4178] [49.9331]
+o7 call [16.2908] [49.8569]
+o7 call [16.2908] [48.0281]
+o7 call [18.8308] [48.0281]
+o7 call [18.8308] [49.8569]
+o7 call [18.7038] [49.9331]
+o7 call [18.3228] [50.3649]
+o7 call [18.0688] [50.5173]
+o7 call [17.764] [50.6189]
+o7 call [17.3576] [50.6189]
+o7 call [17.0528] [50.5173]
+o7 call [16.7988] [50.3649]
+o7 call [16.5448] [50.1109]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -410,6 +1077,19 @@ F300.00000
 o7 call [14.0048] [50.0855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [13.827] [49.8823]
+o7 call [13.7508] [49.8569]
+o7 call [13.7508] [48.0281]
+o7 call [16.2908] [48.0281]
+o7 call [16.2908] [49.8569]
+o7 call [16.1638] [49.9331]
+o7 call [15.7828] [50.3649]
+o7 call [15.5288] [50.5173]
+o7 call [15.224] [50.6189]
+o7 call [14.8176] [50.6189]
+o7 call [14.5128] [50.5173]
+o7 call [14.2588] [50.3649]
+o7 call [14.0048] [50.1109]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -418,6 +1098,19 @@ F300.00000
 o7 call [11.4648] [50.0855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [11.287] [49.8823]
+o7 call [11.2108] [49.8569]
+o7 call [11.2108] [48.0281]
+o7 call [13.7508] [48.0281]
+o7 call [13.7508] [49.8569]
+o7 call [13.6238] [49.9331]
+o7 call [13.2428] [50.3649]
+o7 call [12.9888] [50.5173]
+o7 call [12.684] [50.6189]
+o7 call [12.2776] [50.6189]
+o7 call [11.9728] [50.5173]
+o7 call [11.7188] [50.3649]
+o7 call [11.4648] [50.1109]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -426,6 +1119,23 @@ F300.00000
 o7 call [8.9248] [50.0855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [8.8232] [50.0093]
+o7 call [8.6454] [49.5775]
+o7 call [8.6708] [48.9933]
+o7 call [8.7978] [48.7139]
+o7 call [9.1788] [48.2821]
+o7 call [9.4074] [48.1043]
+o7 call [9.4328] [48.0281]
+o7 call [11.2108] [48.0281]
+o7 call [11.2108] [49.8569]
+o7 call [11.0838] [49.9331]
+o7 call [10.7028] [50.3649]
+o7 call [10.4488] [50.5173]
+o7 call [10.144] [50.6189]
+o7 call [9.7376] [50.6189]
+o7 call [9.4328] [50.5173]
+o7 call [9.1788] [50.3649]
+o7 call [8.9248] [50.1109]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -434,6 +1144,18 @@ F300.00000
 o7 call [67.0908] [47.5455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [67.0908] [45.4881]
+o7 call [68.9196] [45.4881]
+o7 call [69.0974] [45.7167]
+o7 call [69.326] [45.8945]
+o7 call [69.5038] [46.1231]
+o7 call [69.6562] [46.5803]
+o7 call [69.6562] [46.9867]
+o7 call [69.5546] [47.2915]
+o7 call [69.4022] [47.5455]
+o7 call [68.9704] [47.9265]
+o7 call [68.9196] [48.0281]
+o7 call [67.0908] [48.0281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -442,6 +1164,10 @@ F300.00000
 o7 call [64.5508] [47.5455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [64.5508] [45.4881]
+o7 call [67.0908] [45.4881]
+o7 call [67.0908] [48.0281]
+o7 call [64.5508] [48.0281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -450,6 +1176,10 @@ F300.00000
 o7 call [62.0108] [47.5455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [62.0108] [45.4881]
+o7 call [64.5508] [45.4881]
+o7 call [64.5508] [48.0281]
+o7 call [62.0108] [48.0281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -458,6 +1188,10 @@ F300.00000
 o7 call [59.4708] [47.5455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [59.4708] [45.4881]
+o7 call [62.0108] [45.4881]
+o7 call [62.0108] [48.0281]
+o7 call [59.4708] [48.0281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -466,6 +1200,10 @@ F300.00000
 o7 call [56.9308] [47.5455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [56.9308] [45.4881]
+o7 call [59.4708] [45.4881]
+o7 call [59.4708] [48.0281]
+o7 call [56.9308] [48.0281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -474,6 +1212,10 @@ F300.00000
 o7 call [54.3908] [47.5455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [54.3908] [45.4881]
+o7 call [56.9308] [45.4881]
+o7 call [56.9308] [48.0281]
+o7 call [54.3908] [48.0281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -482,6 +1224,10 @@ F300.00000
 o7 call [51.8508] [47.5455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [51.8508] [45.4881]
+o7 call [54.3908] [45.4881]
+o7 call [54.3908] [48.0281]
+o7 call [51.8508] [48.0281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -490,6 +1236,10 @@ F300.00000
 o7 call [49.3108] [47.5455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [49.3108] [45.4881]
+o7 call [51.8508] [45.4881]
+o7 call [51.8508] [48.0281]
+o7 call [49.3108] [48.0281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -498,6 +1248,10 @@ F300.00000
 o7 call [46.7708] [47.5455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [46.7708] [45.4881]
+o7 call [49.3108] [45.4881]
+o7 call [49.3108] [48.0281]
+o7 call [46.7708] [48.0281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -506,6 +1260,10 @@ F300.00000
 o7 call [44.2308] [47.5455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [44.2308] [45.4881]
+o7 call [46.7708] [45.4881]
+o7 call [46.7708] [48.0281]
+o7 call [44.2308] [48.0281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -514,6 +1272,10 @@ F300.00000
 o7 call [41.6908] [47.5455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [41.6908] [45.4881]
+o7 call [44.2308] [45.4881]
+o7 call [44.2308] [48.0281]
+o7 call [41.6908] [48.0281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -522,6 +1284,10 @@ F300.00000
 o7 call [39.1508] [47.5455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [39.1508] [45.4881]
+o7 call [41.6908] [45.4881]
+o7 call [41.6908] [48.0281]
+o7 call [39.1508] [48.0281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -530,6 +1296,10 @@ F300.00000
 o7 call [36.6108] [47.5455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [36.6108] [45.4881]
+o7 call [39.1508] [45.4881]
+o7 call [39.1508] [48.0281]
+o7 call [36.6108] [48.0281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -538,6 +1308,10 @@ F300.00000
 o7 call [34.0708] [47.5455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [34.0708] [45.4881]
+o7 call [36.6108] [45.4881]
+o7 call [36.6108] [48.0281]
+o7 call [34.0708] [48.0281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -546,6 +1320,10 @@ F300.00000
 o7 call [31.5308] [47.5455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [31.5308] [45.4881]
+o7 call [34.0708] [45.4881]
+o7 call [34.0708] [48.0281]
+o7 call [31.5308] [48.0281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -554,6 +1332,10 @@ F300.00000
 o7 call [28.9908] [47.5455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [28.9908] [45.4881]
+o7 call [31.5308] [45.4881]
+o7 call [31.5308] [48.0281]
+o7 call [28.9908] [48.0281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -562,6 +1344,10 @@ F300.00000
 o7 call [26.4508] [47.5455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [26.4508] [45.4881]
+o7 call [28.9908] [45.4881]
+o7 call [28.9908] [48.0281]
+o7 call [26.4508] [48.0281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -570,6 +1356,10 @@ F300.00000
 o7 call [23.9108] [47.5455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [23.9108] [45.4881]
+o7 call [26.4508] [45.4881]
+o7 call [26.4508] [48.0281]
+o7 call [23.9108] [48.0281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -578,6 +1368,10 @@ F300.00000
 o7 call [21.3708] [47.5455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [21.3708] [45.4881]
+o7 call [23.9108] [45.4881]
+o7 call [23.9108] [48.0281]
+o7 call [21.3708] [48.0281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -586,6 +1380,10 @@ F300.00000
 o7 call [18.8308] [47.5455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [18.8308] [45.4881]
+o7 call [21.3708] [45.4881]
+o7 call [21.3708] [48.0281]
+o7 call [18.8308] [48.0281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -594,6 +1392,10 @@ F300.00000
 o7 call [16.2908] [47.5455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [16.2908] [45.4881]
+o7 call [18.8308] [45.4881]
+o7 call [18.8308] [48.0281]
+o7 call [16.2908] [48.0281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -602,6 +1404,10 @@ F300.00000
 o7 call [13.7508] [47.5455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [13.7508] [45.4881]
+o7 call [16.2908] [45.4881]
+o7 call [16.2908] [48.0281]
+o7 call [13.7508] [48.0281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -610,6 +1416,10 @@ F300.00000
 o7 call [11.2108] [47.5455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [11.2108] [45.4881]
+o7 call [13.7508] [45.4881]
+o7 call [13.7508] [48.0281]
+o7 call [11.2108] [48.0281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -618,6 +1428,17 @@ F300.00000
 o7 call [8.9248] [47.5455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [8.8232] [47.4693]
+o7 call [8.6454] [47.0375]
+o7 call [8.6708] [46.4533]
+o7 call [8.7978] [46.1739]
+o7 call [9.1788] [45.7421]
+o7 call [9.4074] [45.5643]
+o7 call [9.4328] [45.4881]
+o7 call [11.2108] [45.4881]
+o7 call [11.2108] [48.0281]
+o7 call [9.4074] [48.0027]
+o7 call [8.9248] [47.5709]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -626,6 +1447,18 @@ F300.00000
 o7 call [67.0908] [45.0055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [67.0908] [42.9481]
+o7 call [68.9196] [42.9481]
+o7 call [69.0974] [43.1767]
+o7 call [69.326] [43.3545]
+o7 call [69.5038] [43.5831]
+o7 call [69.6562] [44.0403]
+o7 call [69.6562] [44.4467]
+o7 call [69.5546] [44.7515]
+o7 call [69.4022] [45.0055]
+o7 call [68.9704] [45.3865]
+o7 call [68.9196] [45.4881]
+o7 call [67.0908] [45.4881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -634,6 +1467,10 @@ F300.00000
 o7 call [64.5508] [45.0055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [64.5508] [42.9481]
+o7 call [67.0908] [42.9481]
+o7 call [67.0908] [45.4881]
+o7 call [64.5508] [45.4881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -642,6 +1479,10 @@ F300.00000
 o7 call [62.0108] [45.0055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [62.0108] [42.9481]
+o7 call [64.5508] [42.9481]
+o7 call [64.5508] [45.4881]
+o7 call [62.0108] [45.4881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -650,6 +1491,10 @@ F300.00000
 o7 call [59.4708] [45.0055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [59.4708] [42.9481]
+o7 call [62.0108] [42.9481]
+o7 call [62.0108] [45.4881]
+o7 call [59.4708] [45.4881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -658,6 +1503,10 @@ F300.00000
 o7 call [56.9308] [45.0055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [56.9308] [42.9481]
+o7 call [59.4708] [42.9481]
+o7 call [59.4708] [45.4881]
+o7 call [56.9308] [45.4881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -666,6 +1515,10 @@ F300.00000
 o7 call [54.3908] [45.0055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [54.3908] [42.9481]
+o7 call [56.9308] [42.9481]
+o7 call [56.9308] [45.4881]
+o7 call [54.3908] [45.4881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -674,6 +1527,10 @@ F300.00000
 o7 call [51.8508] [45.0055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [51.8508] [42.9481]
+o7 call [54.3908] [42.9481]
+o7 call [54.3908] [45.4881]
+o7 call [51.8508] [45.4881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -682,6 +1539,10 @@ F300.00000
 o7 call [49.3108] [45.0055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [49.3108] [42.9481]
+o7 call [51.8508] [42.9481]
+o7 call [51.8508] [45.4881]
+o7 call [49.3108] [45.4881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -690,6 +1551,10 @@ F300.00000
 o7 call [46.7708] [45.0055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [46.7708] [42.9481]
+o7 call [49.3108] [42.9481]
+o7 call [49.3108] [45.4881]
+o7 call [46.7708] [45.4881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -698,6 +1563,10 @@ F300.00000
 o7 call [44.2308] [45.0055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [44.2308] [42.9481]
+o7 call [46.7708] [42.9481]
+o7 call [46.7708] [45.4881]
+o7 call [44.2308] [45.4881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -706,6 +1575,10 @@ F300.00000
 o7 call [41.6908] [45.0055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [41.6908] [42.9481]
+o7 call [44.2308] [42.9481]
+o7 call [44.2308] [45.4881]
+o7 call [41.6908] [45.4881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -714,6 +1587,10 @@ F300.00000
 o7 call [39.1508] [45.0055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [39.1508] [42.9481]
+o7 call [41.6908] [42.9481]
+o7 call [41.6908] [45.4881]
+o7 call [39.1508] [45.4881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -722,6 +1599,10 @@ F300.00000
 o7 call [36.6108] [45.0055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [36.6108] [42.9481]
+o7 call [39.1508] [42.9481]
+o7 call [39.1508] [45.4881]
+o7 call [36.6108] [45.4881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -730,6 +1611,10 @@ F300.00000
 o7 call [34.0708] [45.0055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [34.0708] [42.9481]
+o7 call [36.6108] [42.9481]
+o7 call [36.6108] [45.4881]
+o7 call [34.0708] [45.4881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -738,6 +1623,10 @@ F300.00000
 o7 call [31.5308] [45.0055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [31.5308] [42.9481]
+o7 call [34.0708] [42.9481]
+o7 call [34.0708] [45.4881]
+o7 call [31.5308] [45.4881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -746,6 +1635,10 @@ F300.00000
 o7 call [28.9908] [45.0055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [28.9908] [42.9481]
+o7 call [31.5308] [42.9481]
+o7 call [31.5308] [45.4881]
+o7 call [28.9908] [45.4881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -754,6 +1647,10 @@ F300.00000
 o7 call [26.4508] [45.0055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [26.4508] [42.9481]
+o7 call [28.9908] [42.9481]
+o7 call [28.9908] [45.4881]
+o7 call [26.4508] [45.4881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -762,6 +1659,10 @@ F300.00000
 o7 call [23.9108] [45.0055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [23.9108] [42.9481]
+o7 call [26.4508] [42.9481]
+o7 call [26.4508] [45.4881]
+o7 call [23.9108] [45.4881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -770,6 +1671,10 @@ F300.00000
 o7 call [21.3708] [45.0055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [21.3708] [42.9481]
+o7 call [23.9108] [42.9481]
+o7 call [23.9108] [45.4881]
+o7 call [21.3708] [45.4881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -778,6 +1683,10 @@ F300.00000
 o7 call [18.8308] [45.0055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [18.8308] [42.9481]
+o7 call [21.3708] [42.9481]
+o7 call [21.3708] [45.4881]
+o7 call [18.8308] [45.4881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -786,6 +1695,10 @@ F300.00000
 o7 call [16.2908] [45.0055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [16.2908] [42.9481]
+o7 call [18.8308] [42.9481]
+o7 call [18.8308] [45.4881]
+o7 call [16.2908] [45.4881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -794,6 +1707,10 @@ F300.00000
 o7 call [13.7508] [45.0055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [13.7508] [42.9481]
+o7 call [16.2908] [42.9481]
+o7 call [16.2908] [45.4881]
+o7 call [13.7508] [45.4881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -802,6 +1719,10 @@ F300.00000
 o7 call [11.2108] [45.0055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [11.2108] [42.9481]
+o7 call [13.7508] [42.9481]
+o7 call [13.7508] [45.4881]
+o7 call [11.2108] [45.4881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -810,6 +1731,17 @@ F300.00000
 o7 call [8.9248] [45.0055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [8.8232] [44.9293]
+o7 call [8.6454] [44.4975]
+o7 call [8.6708] [43.9133]
+o7 call [8.7978] [43.6339]
+o7 call [9.1788] [43.2021]
+o7 call [9.4074] [43.0243]
+o7 call [9.4328] [42.9481]
+o7 call [11.2108] [42.9481]
+o7 call [11.2108] [45.4881]
+o7 call [9.4074] [45.4627]
+o7 call [8.9248] [45.0309]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -818,6 +1750,18 @@ F300.00000
 o7 call [67.0908] [42.4655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [67.0908] [40.4081]
+o7 call [68.9196] [40.4081]
+o7 call [69.0974] [40.6367]
+o7 call [69.326] [40.8145]
+o7 call [69.5038] [41.0431]
+o7 call [69.6562] [41.5003]
+o7 call [69.6562] [41.9067]
+o7 call [69.5546] [42.2115]
+o7 call [69.4022] [42.4655]
+o7 call [68.9704] [42.8465]
+o7 call [68.9196] [42.9481]
+o7 call [67.0908] [42.9481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -826,6 +1770,10 @@ F300.00000
 o7 call [64.5508] [42.4655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [64.5508] [40.4081]
+o7 call [67.0908] [40.4081]
+o7 call [67.0908] [42.9481]
+o7 call [64.5508] [42.9481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -834,6 +1782,10 @@ F300.00000
 o7 call [62.0108] [42.4655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [62.0108] [40.4081]
+o7 call [64.5508] [40.4081]
+o7 call [64.5508] [42.9481]
+o7 call [62.0108] [42.9481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -842,6 +1794,10 @@ F300.00000
 o7 call [59.4708] [42.4655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [59.4708] [40.4081]
+o7 call [62.0108] [40.4081]
+o7 call [62.0108] [42.9481]
+o7 call [59.4708] [42.9481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -850,6 +1806,10 @@ F300.00000
 o7 call [56.9308] [42.4655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [56.9308] [40.4081]
+o7 call [59.4708] [40.4081]
+o7 call [59.4708] [42.9481]
+o7 call [56.9308] [42.9481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -858,6 +1818,10 @@ F300.00000
 o7 call [54.3908] [42.4655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [54.3908] [40.4081]
+o7 call [56.9308] [40.4081]
+o7 call [56.9308] [42.9481]
+o7 call [54.3908] [42.9481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -866,6 +1830,10 @@ F300.00000
 o7 call [51.8508] [42.4655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [51.8508] [40.4081]
+o7 call [54.3908] [40.4081]
+o7 call [54.3908] [42.9481]
+o7 call [51.8508] [42.9481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -874,6 +1842,10 @@ F300.00000
 o7 call [49.3108] [42.4655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [49.3108] [40.4081]
+o7 call [51.8508] [40.4081]
+o7 call [51.8508] [42.9481]
+o7 call [49.3108] [42.9481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -882,6 +1854,10 @@ F300.00000
 o7 call [46.7708] [42.4655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [46.7708] [40.4081]
+o7 call [49.3108] [40.4081]
+o7 call [49.3108] [42.9481]
+o7 call [46.7708] [42.9481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -890,6 +1866,10 @@ F300.00000
 o7 call [44.2308] [42.4655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [44.2308] [40.4081]
+o7 call [46.7708] [40.4081]
+o7 call [46.7708] [42.9481]
+o7 call [44.2308] [42.9481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -898,6 +1878,10 @@ F300.00000
 o7 call [41.6908] [42.4655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [41.6908] [40.4081]
+o7 call [44.2308] [40.4081]
+o7 call [44.2308] [42.9481]
+o7 call [41.6908] [42.9481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -906,6 +1890,10 @@ F300.00000
 o7 call [39.1508] [42.4655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [39.1508] [40.4081]
+o7 call [41.6908] [40.4081]
+o7 call [41.6908] [42.9481]
+o7 call [39.1508] [42.9481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -914,6 +1902,10 @@ F300.00000
 o7 call [36.6108] [42.4655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [36.6108] [40.4081]
+o7 call [39.1508] [40.4081]
+o7 call [39.1508] [42.9481]
+o7 call [36.6108] [42.9481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -922,6 +1914,10 @@ F300.00000
 o7 call [34.0708] [42.4655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [34.0708] [40.4081]
+o7 call [36.6108] [40.4081]
+o7 call [36.6108] [42.9481]
+o7 call [34.0708] [42.9481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -930,6 +1926,10 @@ F300.00000
 o7 call [31.5308] [42.4655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [31.5308] [40.4081]
+o7 call [34.0708] [40.4081]
+o7 call [34.0708] [42.9481]
+o7 call [31.5308] [42.9481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -938,6 +1938,10 @@ F300.00000
 o7 call [28.9908] [42.4655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [28.9908] [40.4081]
+o7 call [31.5308] [40.4081]
+o7 call [31.5308] [42.9481]
+o7 call [28.9908] [42.9481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -946,6 +1950,10 @@ F300.00000
 o7 call [26.4508] [42.4655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [26.4508] [40.4081]
+o7 call [28.9908] [40.4081]
+o7 call [28.9908] [42.9481]
+o7 call [26.4508] [42.9481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -954,6 +1962,10 @@ F300.00000
 o7 call [23.9108] [42.4655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [23.9108] [40.4081]
+o7 call [26.4508] [40.4081]
+o7 call [26.4508] [42.9481]
+o7 call [23.9108] [42.9481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -962,6 +1974,10 @@ F300.00000
 o7 call [21.3708] [42.4655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [21.3708] [40.4081]
+o7 call [23.9108] [40.4081]
+o7 call [23.9108] [42.9481]
+o7 call [21.3708] [42.9481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -970,6 +1986,10 @@ F300.00000
 o7 call [18.8308] [42.4655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [18.8308] [40.4081]
+o7 call [21.3708] [40.4081]
+o7 call [21.3708] [42.9481]
+o7 call [18.8308] [42.9481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -978,6 +1998,10 @@ F300.00000
 o7 call [16.2908] [42.4655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [16.2908] [40.4081]
+o7 call [18.8308] [40.4081]
+o7 call [18.8308] [42.9481]
+o7 call [16.2908] [42.9481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -986,6 +2010,10 @@ F300.00000
 o7 call [13.7508] [42.4655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [13.7508] [40.4081]
+o7 call [16.2908] [40.4081]
+o7 call [16.2908] [42.9481]
+o7 call [13.7508] [42.9481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -994,6 +2022,10 @@ F300.00000
 o7 call [11.2108] [42.4655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [11.2108] [40.4081]
+o7 call [13.7508] [40.4081]
+o7 call [13.7508] [42.9481]
+o7 call [11.2108] [42.9481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1002,6 +2034,17 @@ F300.00000
 o7 call [8.9248] [42.4655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [8.8232] [42.3893]
+o7 call [8.6454] [41.9575]
+o7 call [8.6708] [41.3733]
+o7 call [8.7978] [41.0939]
+o7 call [9.1788] [40.6621]
+o7 call [9.4074] [40.4843]
+o7 call [9.4328] [40.4081]
+o7 call [11.2108] [40.4081]
+o7 call [11.2108] [42.9481]
+o7 call [9.4074] [42.9227]
+o7 call [8.9248] [42.4909]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1010,6 +2053,18 @@ F300.00000
 o7 call [67.0908] [39.9255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [67.0908] [37.8681]
+o7 call [68.9196] [37.8681]
+o7 call [69.0974] [38.0967]
+o7 call [69.326] [38.2745]
+o7 call [69.5038] [38.5031]
+o7 call [69.6562] [38.9603]
+o7 call [69.6562] [39.3667]
+o7 call [69.5546] [39.6715]
+o7 call [69.4022] [39.9255]
+o7 call [68.9704] [40.3065]
+o7 call [68.9196] [40.4081]
+o7 call [67.0908] [40.4081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1018,6 +2073,10 @@ F300.00000
 o7 call [64.5508] [39.9255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [64.5508] [37.8681]
+o7 call [67.0908] [37.8681]
+o7 call [67.0908] [40.4081]
+o7 call [64.5508] [40.4081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1026,6 +2085,10 @@ F300.00000
 o7 call [62.0108] [39.9255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [62.0108] [37.8681]
+o7 call [64.5508] [37.8681]
+o7 call [64.5508] [40.4081]
+o7 call [62.0108] [40.4081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1034,6 +2097,10 @@ F300.00000
 o7 call [59.4708] [39.9255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [59.4708] [37.8681]
+o7 call [62.0108] [37.8681]
+o7 call [62.0108] [40.4081]
+o7 call [59.4708] [40.4081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1042,6 +2109,10 @@ F300.00000
 o7 call [56.9308] [39.9255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [56.9308] [37.8681]
+o7 call [59.4708] [37.8681]
+o7 call [59.4708] [40.4081]
+o7 call [56.9308] [40.4081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1050,6 +2121,10 @@ F300.00000
 o7 call [54.3908] [39.9255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [54.3908] [37.8681]
+o7 call [56.9308] [37.8681]
+o7 call [56.9308] [40.4081]
+o7 call [54.3908] [40.4081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1058,6 +2133,10 @@ F300.00000
 o7 call [51.8508] [39.9255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [51.8508] [37.8681]
+o7 call [54.3908] [37.8681]
+o7 call [54.3908] [40.4081]
+o7 call [51.8508] [40.4081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1066,6 +2145,10 @@ F300.00000
 o7 call [49.3108] [39.9255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [49.3108] [37.8681]
+o7 call [51.8508] [37.8681]
+o7 call [51.8508] [40.4081]
+o7 call [49.3108] [40.4081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1074,6 +2157,10 @@ F300.00000
 o7 call [46.7708] [39.9255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [46.7708] [37.8681]
+o7 call [49.3108] [37.8681]
+o7 call [49.3108] [40.4081]
+o7 call [46.7708] [40.4081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1082,6 +2169,10 @@ F300.00000
 o7 call [44.2308] [39.9255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [44.2308] [37.8681]
+o7 call [46.7708] [37.8681]
+o7 call [46.7708] [40.4081]
+o7 call [44.2308] [40.4081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1090,6 +2181,10 @@ F300.00000
 o7 call [41.6908] [39.9255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [41.6908] [37.8681]
+o7 call [44.2308] [37.8681]
+o7 call [44.2308] [40.4081]
+o7 call [41.6908] [40.4081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1098,6 +2193,10 @@ F300.00000
 o7 call [39.1508] [39.9255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [39.1508] [37.8681]
+o7 call [41.6908] [37.8681]
+o7 call [41.6908] [40.4081]
+o7 call [39.1508] [40.4081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1106,6 +2205,10 @@ F300.00000
 o7 call [36.6108] [39.9255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [36.6108] [37.8681]
+o7 call [39.1508] [37.8681]
+o7 call [39.1508] [40.4081]
+o7 call [36.6108] [40.4081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1114,6 +2217,10 @@ F300.00000
 o7 call [34.0708] [39.9255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [34.0708] [37.8681]
+o7 call [36.6108] [37.8681]
+o7 call [36.6108] [40.4081]
+o7 call [34.0708] [40.4081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1122,6 +2229,10 @@ F300.00000
 o7 call [31.5308] [39.9255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [31.5308] [37.8681]
+o7 call [34.0708] [37.8681]
+o7 call [34.0708] [40.4081]
+o7 call [31.5308] [40.4081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1130,6 +2241,10 @@ F300.00000
 o7 call [28.9908] [39.9255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [28.9908] [37.8681]
+o7 call [31.5308] [37.8681]
+o7 call [31.5308] [40.4081]
+o7 call [28.9908] [40.4081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1138,6 +2253,10 @@ F300.00000
 o7 call [26.4508] [39.9255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [26.4508] [37.8681]
+o7 call [28.9908] [37.8681]
+o7 call [28.9908] [40.4081]
+o7 call [26.4508] [40.4081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1146,6 +2265,10 @@ F300.00000
 o7 call [23.9108] [39.9255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [23.9108] [37.8681]
+o7 call [26.4508] [37.8681]
+o7 call [26.4508] [40.4081]
+o7 call [23.9108] [40.4081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1154,6 +2277,10 @@ F300.00000
 o7 call [21.3708] [39.9255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [21.3708] [37.8681]
+o7 call [23.9108] [37.8681]
+o7 call [23.9108] [40.4081]
+o7 call [21.3708] [40.4081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1162,6 +2289,10 @@ F300.00000
 o7 call [18.8308] [39.9255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [18.8308] [37.8681]
+o7 call [21.3708] [37.8681]
+o7 call [21.3708] [40.4081]
+o7 call [18.8308] [40.4081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1170,6 +2301,10 @@ F300.00000
 o7 call [16.2908] [39.9255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [16.2908] [37.8681]
+o7 call [18.8308] [37.8681]
+o7 call [18.8308] [40.4081]
+o7 call [16.2908] [40.4081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1178,6 +2313,10 @@ F300.00000
 o7 call [13.7508] [39.9255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [13.7508] [37.8681]
+o7 call [16.2908] [37.8681]
+o7 call [16.2908] [40.4081]
+o7 call [13.7508] [40.4081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1186,6 +2325,10 @@ F300.00000
 o7 call [11.2108] [39.9255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [11.2108] [37.8681]
+o7 call [13.7508] [37.8681]
+o7 call [13.7508] [40.4081]
+o7 call [11.2108] [40.4081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1194,6 +2337,17 @@ F300.00000
 o7 call [8.9248] [39.9255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [8.8232] [39.8493]
+o7 call [8.6454] [39.4175]
+o7 call [8.6708] [38.8333]
+o7 call [8.7978] [38.5539]
+o7 call [9.1788] [38.1221]
+o7 call [9.4074] [37.9443]
+o7 call [9.4328] [37.8681]
+o7 call [11.2108] [37.8681]
+o7 call [11.2108] [40.4081]
+o7 call [9.4074] [40.3827]
+o7 call [8.9248] [39.9509]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1202,6 +2356,18 @@ F300.00000
 o7 call [67.0908] [37.3855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [67.0908] [35.3281]
+o7 call [68.9196] [35.3281]
+o7 call [69.0974] [35.5567]
+o7 call [69.326] [35.7345]
+o7 call [69.5038] [35.9631]
+o7 call [69.6562] [36.4203]
+o7 call [69.6562] [36.8267]
+o7 call [69.5546] [37.1315]
+o7 call [69.4022] [37.3855]
+o7 call [68.9704] [37.7665]
+o7 call [68.9196] [37.8681]
+o7 call [67.0908] [37.8681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1210,6 +2376,10 @@ F300.00000
 o7 call [64.5508] [37.3855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [64.5508] [35.3281]
+o7 call [67.0908] [35.3281]
+o7 call [67.0908] [37.8681]
+o7 call [64.5508] [37.8681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1218,6 +2388,10 @@ F300.00000
 o7 call [62.0108] [37.3855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [62.0108] [35.3281]
+o7 call [64.5508] [35.3281]
+o7 call [64.5508] [37.8681]
+o7 call [62.0108] [37.8681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1226,6 +2400,10 @@ F300.00000
 o7 call [59.4708] [37.3855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [59.4708] [35.3281]
+o7 call [62.0108] [35.3281]
+o7 call [62.0108] [37.8681]
+o7 call [59.4708] [37.8681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1234,6 +2412,10 @@ F300.00000
 o7 call [56.9308] [37.3855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [56.9308] [35.3281]
+o7 call [59.4708] [35.3281]
+o7 call [59.4708] [37.8681]
+o7 call [56.9308] [37.8681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1242,6 +2424,10 @@ F300.00000
 o7 call [54.3908] [37.3855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [54.3908] [35.3281]
+o7 call [56.9308] [35.3281]
+o7 call [56.9308] [37.8681]
+o7 call [54.3908] [37.8681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1250,6 +2436,10 @@ F300.00000
 o7 call [51.8508] [37.3855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [51.8508] [35.3281]
+o7 call [54.3908] [35.3281]
+o7 call [54.3908] [37.8681]
+o7 call [51.8508] [37.8681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1258,6 +2448,10 @@ F300.00000
 o7 call [49.3108] [37.3855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [49.3108] [35.3281]
+o7 call [51.8508] [35.3281]
+o7 call [51.8508] [37.8681]
+o7 call [49.3108] [37.8681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1266,6 +2460,10 @@ F300.00000
 o7 call [46.7708] [37.3855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [46.7708] [35.3281]
+o7 call [49.3108] [35.3281]
+o7 call [49.3108] [37.8681]
+o7 call [46.7708] [37.8681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1274,6 +2472,10 @@ F300.00000
 o7 call [44.2308] [37.3855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [44.2308] [35.3281]
+o7 call [46.7708] [35.3281]
+o7 call [46.7708] [37.8681]
+o7 call [44.2308] [37.8681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1282,6 +2484,10 @@ F300.00000
 o7 call [41.6908] [37.3855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [41.6908] [35.3281]
+o7 call [44.2308] [35.3281]
+o7 call [44.2308] [37.8681]
+o7 call [41.6908] [37.8681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1290,6 +2496,10 @@ F300.00000
 o7 call [39.1508] [37.3855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [39.1508] [35.3281]
+o7 call [41.6908] [35.3281]
+o7 call [41.6908] [37.8681]
+o7 call [39.1508] [37.8681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1298,6 +2508,10 @@ F300.00000
 o7 call [36.6108] [37.3855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [36.6108] [35.3281]
+o7 call [39.1508] [35.3281]
+o7 call [39.1508] [37.8681]
+o7 call [36.6108] [37.8681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1306,6 +2520,10 @@ F300.00000
 o7 call [34.0708] [37.3855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [34.0708] [35.3281]
+o7 call [36.6108] [35.3281]
+o7 call [36.6108] [37.8681]
+o7 call [34.0708] [37.8681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1314,6 +2532,10 @@ F300.00000
 o7 call [31.5308] [37.3855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [31.5308] [35.3281]
+o7 call [34.0708] [35.3281]
+o7 call [34.0708] [37.8681]
+o7 call [31.5308] [37.8681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1322,6 +2544,10 @@ F300.00000
 o7 call [28.9908] [37.3855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [28.9908] [35.3281]
+o7 call [31.5308] [35.3281]
+o7 call [31.5308] [37.8681]
+o7 call [28.9908] [37.8681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1330,6 +2556,10 @@ F300.00000
 o7 call [26.4508] [37.3855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [26.4508] [35.3281]
+o7 call [28.9908] [35.3281]
+o7 call [28.9908] [37.8681]
+o7 call [26.4508] [37.8681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1338,6 +2568,10 @@ F300.00000
 o7 call [23.9108] [37.3855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [23.9108] [35.3281]
+o7 call [26.4508] [35.3281]
+o7 call [26.4508] [37.8681]
+o7 call [23.9108] [37.8681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1346,6 +2580,10 @@ F300.00000
 o7 call [21.3708] [37.3855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [21.3708] [35.3281]
+o7 call [23.9108] [35.3281]
+o7 call [23.9108] [37.8681]
+o7 call [21.3708] [37.8681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1354,6 +2592,10 @@ F300.00000
 o7 call [18.8308] [37.3855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [18.8308] [35.3281]
+o7 call [21.3708] [35.3281]
+o7 call [21.3708] [37.8681]
+o7 call [18.8308] [37.8681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1362,6 +2604,10 @@ F300.00000
 o7 call [16.2908] [37.3855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [16.2908] [35.3281]
+o7 call [18.8308] [35.3281]
+o7 call [18.8308] [37.8681]
+o7 call [16.2908] [37.8681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1370,6 +2616,10 @@ F300.00000
 o7 call [13.7508] [37.3855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [13.7508] [35.3281]
+o7 call [16.2908] [35.3281]
+o7 call [16.2908] [37.8681]
+o7 call [13.7508] [37.8681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1378,6 +2628,10 @@ F300.00000
 o7 call [11.2108] [37.3855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [11.2108] [35.3281]
+o7 call [13.7508] [35.3281]
+o7 call [13.7508] [37.8681]
+o7 call [11.2108] [37.8681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1386,6 +2640,17 @@ F300.00000
 o7 call [8.9248] [37.3855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [8.8232] [37.3093]
+o7 call [8.6454] [36.8775]
+o7 call [8.6708] [36.2933]
+o7 call [8.7978] [36.0139]
+o7 call [9.1788] [35.5821]
+o7 call [9.4074] [35.4043]
+o7 call [9.4328] [35.3281]
+o7 call [11.2108] [35.3281]
+o7 call [11.2108] [37.8681]
+o7 call [9.4074] [37.8427]
+o7 call [8.9248] [37.4109]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1394,6 +2659,18 @@ F300.00000
 o7 call [67.0908] [34.8455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [67.0908] [32.7881]
+o7 call [68.9196] [32.7881]
+o7 call [69.0974] [33.0167]
+o7 call [69.326] [33.1945]
+o7 call [69.5038] [33.4231]
+o7 call [69.6562] [33.8803]
+o7 call [69.6562] [34.2867]
+o7 call [69.5546] [34.5915]
+o7 call [69.4022] [34.8455]
+o7 call [68.9704] [35.2265]
+o7 call [68.9196] [35.3281]
+o7 call [67.0908] [35.3281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1402,6 +2679,10 @@ F300.00000
 o7 call [64.5508] [34.8455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [64.5508] [32.7881]
+o7 call [67.0908] [32.7881]
+o7 call [67.0908] [35.3281]
+o7 call [64.5508] [35.3281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1410,6 +2691,10 @@ F300.00000
 o7 call [62.0108] [34.8455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [62.0108] [32.7881]
+o7 call [64.5508] [32.7881]
+o7 call [64.5508] [35.3281]
+o7 call [62.0108] [35.3281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1418,6 +2703,10 @@ F300.00000
 o7 call [59.4708] [34.8455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [59.4708] [32.7881]
+o7 call [62.0108] [32.7881]
+o7 call [62.0108] [35.3281]
+o7 call [59.4708] [35.3281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1426,6 +2715,10 @@ F300.00000
 o7 call [56.9308] [34.8455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [56.9308] [32.7881]
+o7 call [59.4708] [32.7881]
+o7 call [59.4708] [35.3281]
+o7 call [56.9308] [35.3281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1434,6 +2727,10 @@ F300.00000
 o7 call [54.3908] [34.8455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [54.3908] [32.7881]
+o7 call [56.9308] [32.7881]
+o7 call [56.9308] [35.3281]
+o7 call [54.3908] [35.3281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1442,6 +2739,10 @@ F300.00000
 o7 call [51.8508] [34.8455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [51.8508] [32.7881]
+o7 call [54.3908] [32.7881]
+o7 call [54.3908] [35.3281]
+o7 call [51.8508] [35.3281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1450,6 +2751,10 @@ F300.00000
 o7 call [49.3108] [34.8455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [49.3108] [32.7881]
+o7 call [51.8508] [32.7881]
+o7 call [51.8508] [35.3281]
+o7 call [49.3108] [35.3281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1458,6 +2763,10 @@ F300.00000
 o7 call [46.7708] [34.8455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [46.7708] [32.7881]
+o7 call [49.3108] [32.7881]
+o7 call [49.3108] [35.3281]
+o7 call [46.7708] [35.3281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1466,6 +2775,10 @@ F300.00000
 o7 call [44.2308] [34.8455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [44.2308] [32.7881]
+o7 call [46.7708] [32.7881]
+o7 call [46.7708] [35.3281]
+o7 call [44.2308] [35.3281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1474,6 +2787,10 @@ F300.00000
 o7 call [41.6908] [34.8455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [41.6908] [32.7881]
+o7 call [44.2308] [32.7881]
+o7 call [44.2308] [35.3281]
+o7 call [41.6908] [35.3281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1482,6 +2799,10 @@ F300.00000
 o7 call [39.1508] [34.8455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [39.1508] [32.7881]
+o7 call [41.6908] [32.7881]
+o7 call [41.6908] [35.3281]
+o7 call [39.1508] [35.3281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1490,6 +2811,10 @@ F300.00000
 o7 call [36.6108] [34.8455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [36.6108] [32.7881]
+o7 call [39.1508] [32.7881]
+o7 call [39.1508] [35.3281]
+o7 call [36.6108] [35.3281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1498,6 +2823,10 @@ F300.00000
 o7 call [34.0708] [34.8455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [34.0708] [32.7881]
+o7 call [36.6108] [32.7881]
+o7 call [36.6108] [35.3281]
+o7 call [34.0708] [35.3281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1506,6 +2835,10 @@ F300.00000
 o7 call [31.5308] [34.8455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [31.5308] [32.7881]
+o7 call [34.0708] [32.7881]
+o7 call [34.0708] [35.3281]
+o7 call [31.5308] [35.3281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1514,6 +2847,10 @@ F300.00000
 o7 call [28.9908] [34.8455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [28.9908] [32.7881]
+o7 call [31.5308] [32.7881]
+o7 call [31.5308] [35.3281]
+o7 call [28.9908] [35.3281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1522,6 +2859,10 @@ F300.00000
 o7 call [26.4508] [34.8455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [26.4508] [32.7881]
+o7 call [28.9908] [32.7881]
+o7 call [28.9908] [35.3281]
+o7 call [26.4508] [35.3281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1530,6 +2871,10 @@ F300.00000
 o7 call [23.9108] [34.8455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [23.9108] [32.7881]
+o7 call [26.4508] [32.7881]
+o7 call [26.4508] [35.3281]
+o7 call [23.9108] [35.3281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1538,6 +2883,10 @@ F300.00000
 o7 call [21.3708] [34.8455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [21.3708] [32.7881]
+o7 call [23.9108] [32.7881]
+o7 call [23.9108] [35.3281]
+o7 call [21.3708] [35.3281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1546,6 +2895,10 @@ F300.00000
 o7 call [18.8308] [34.8455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [18.8308] [32.7881]
+o7 call [21.3708] [32.7881]
+o7 call [21.3708] [35.3281]
+o7 call [18.8308] [35.3281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1554,6 +2907,10 @@ F300.00000
 o7 call [16.2908] [34.8455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [16.2908] [32.7881]
+o7 call [18.8308] [32.7881]
+o7 call [18.8308] [35.3281]
+o7 call [16.2908] [35.3281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1562,6 +2919,10 @@ F300.00000
 o7 call [13.7508] [34.8455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [13.7508] [32.7881]
+o7 call [16.2908] [32.7881]
+o7 call [16.2908] [35.3281]
+o7 call [13.7508] [35.3281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1570,6 +2931,10 @@ F300.00000
 o7 call [11.2108] [34.8455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [11.2108] [32.7881]
+o7 call [13.7508] [32.7881]
+o7 call [13.7508] [35.3281]
+o7 call [11.2108] [35.3281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1578,6 +2943,17 @@ F300.00000
 o7 call [8.9248] [34.8455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [8.8232] [34.7693]
+o7 call [8.6454] [34.3375]
+o7 call [8.6708] [33.7533]
+o7 call [8.7978] [33.4739]
+o7 call [9.1788] [33.0421]
+o7 call [9.4074] [32.8643]
+o7 call [9.4328] [32.7881]
+o7 call [11.2108] [32.7881]
+o7 call [11.2108] [35.3281]
+o7 call [9.4074] [35.3027]
+o7 call [8.9248] [34.8709]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1586,6 +2962,16 @@ F300.00000
 o7 call [5.8768] [33.5501]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [5.8768] [31.5435]
+o7 call [8.0358] [31.5181]
+o7 call [8.0358] [31.9245]
+o7 call [8.239] [32.1277]
+o7 call [8.4168] [32.5595]
+o7 call [8.4168] [33.0675]
+o7 call [8.1374] [33.6009]
+o7 call [8.0358] [33.7025]
+o7 call [8.0358] [34.0581]
+o7 call [5.9022] [34.0581]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1594,6 +2980,12 @@ F300.00000
 o7 call [2.9812] [33.5501]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [2.9812] [31.5435]
+o7 call [4.5814] [31.5181]
+o7 call [5.8768] [31.5435]
+o7 call [5.8514] [34.0581]
+o7 call [3.0066] [34.0581]
+o7 call [2.9812] [33.6771]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1602,6 +2994,18 @@ F300.00000
 o7 call [67.0908] [32.3055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [67.0908] [30.2481]
+o7 call [68.9196] [30.2481]
+o7 call [69.0974] [30.4767]
+o7 call [69.326] [30.6545]
+o7 call [69.5038] [30.8831]
+o7 call [69.6562] [31.3403]
+o7 call [69.6562] [31.7467]
+o7 call [69.5546] [32.0515]
+o7 call [69.4022] [32.3055]
+o7 call [68.9704] [32.6865]
+o7 call [68.9196] [32.7881]
+o7 call [67.0908] [32.7881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1610,6 +3014,10 @@ F300.00000
 o7 call [64.5508] [32.3055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [64.5508] [30.2481]
+o7 call [67.0908] [30.2481]
+o7 call [67.0908] [32.7881]
+o7 call [64.5508] [32.7881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1618,6 +3026,10 @@ F300.00000
 o7 call [62.0108] [32.3055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [62.0108] [30.2481]
+o7 call [64.5508] [30.2481]
+o7 call [64.5508] [32.7881]
+o7 call [62.0108] [32.7881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1626,6 +3038,10 @@ F300.00000
 o7 call [59.4708] [32.3055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [59.4708] [30.2481]
+o7 call [62.0108] [30.2481]
+o7 call [62.0108] [32.7881]
+o7 call [59.4708] [32.7881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1634,6 +3050,10 @@ F300.00000
 o7 call [56.9308] [32.3055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [56.9308] [30.2481]
+o7 call [59.4708] [30.2481]
+o7 call [59.4708] [32.7881]
+o7 call [56.9308] [32.7881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1642,6 +3062,10 @@ F300.00000
 o7 call [54.3908] [32.3055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [54.3908] [30.2481]
+o7 call [56.9308] [30.2481]
+o7 call [56.9308] [32.7881]
+o7 call [54.3908] [32.7881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1650,6 +3074,10 @@ F300.00000
 o7 call [51.8508] [32.3055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [51.8508] [30.2481]
+o7 call [54.3908] [30.2481]
+o7 call [54.3908] [32.7881]
+o7 call [51.8508] [32.7881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1658,6 +3086,10 @@ F300.00000
 o7 call [49.3108] [32.3055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [49.3108] [30.2481]
+o7 call [51.8508] [30.2481]
+o7 call [51.8508] [32.7881]
+o7 call [49.3108] [32.7881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1666,6 +3098,10 @@ F300.00000
 o7 call [46.7708] [32.3055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [46.7708] [30.2481]
+o7 call [49.3108] [30.2481]
+o7 call [49.3108] [32.7881]
+o7 call [46.7708] [32.7881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1674,6 +3110,10 @@ F300.00000
 o7 call [44.2308] [32.3055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [44.2308] [30.2481]
+o7 call [46.7708] [30.2481]
+o7 call [46.7708] [32.7881]
+o7 call [44.2308] [32.7881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1682,6 +3122,10 @@ F300.00000
 o7 call [41.6908] [32.3055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [41.6908] [30.2481]
+o7 call [44.2308] [30.2481]
+o7 call [44.2308] [32.7881]
+o7 call [41.6908] [32.7881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1690,6 +3134,10 @@ F300.00000
 o7 call [39.1508] [32.3055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [39.1508] [30.2481]
+o7 call [41.6908] [30.2481]
+o7 call [41.6908] [32.7881]
+o7 call [39.1508] [32.7881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1698,6 +3146,10 @@ F300.00000
 o7 call [36.6108] [32.3055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [36.6108] [30.2481]
+o7 call [39.1508] [30.2481]
+o7 call [39.1508] [32.7881]
+o7 call [36.6108] [32.7881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1706,6 +3158,10 @@ F300.00000
 o7 call [34.0708] [32.3055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [34.0708] [30.2481]
+o7 call [36.6108] [30.2481]
+o7 call [36.6108] [32.7881]
+o7 call [34.0708] [32.7881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1714,6 +3170,10 @@ F300.00000
 o7 call [31.5308] [32.3055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [31.5308] [30.2481]
+o7 call [34.0708] [30.2481]
+o7 call [34.0708] [32.7881]
+o7 call [31.5308] [32.7881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1722,6 +3182,10 @@ F300.00000
 o7 call [28.9908] [32.3055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [28.9908] [30.2481]
+o7 call [31.5308] [30.2481]
+o7 call [31.5308] [32.7881]
+o7 call [28.9908] [32.7881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1730,6 +3194,10 @@ F300.00000
 o7 call [26.4508] [32.3055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [26.4508] [30.2481]
+o7 call [28.9908] [30.2481]
+o7 call [28.9908] [32.7881]
+o7 call [26.4508] [32.7881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1738,6 +3206,10 @@ F300.00000
 o7 call [23.9108] [32.3055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [23.9108] [30.2481]
+o7 call [26.4508] [30.2481]
+o7 call [26.4508] [32.7881]
+o7 call [23.9108] [32.7881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1746,6 +3218,10 @@ F300.00000
 o7 call [21.3708] [32.3055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [21.3708] [30.2481]
+o7 call [23.9108] [30.2481]
+o7 call [23.9108] [32.7881]
+o7 call [21.3708] [32.7881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1754,6 +3230,10 @@ F300.00000
 o7 call [18.8308] [32.3055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [18.8308] [30.2481]
+o7 call [21.3708] [30.2481]
+o7 call [21.3708] [32.7881]
+o7 call [18.8308] [32.7881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1762,6 +3242,10 @@ F300.00000
 o7 call [16.2908] [32.3055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [16.2908] [30.2481]
+o7 call [18.8308] [30.2481]
+o7 call [18.8308] [32.7881]
+o7 call [16.2908] [32.7881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1770,6 +3254,10 @@ F300.00000
 o7 call [13.7508] [32.3055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [13.7508] [30.2481]
+o7 call [16.2908] [30.2481]
+o7 call [16.2908] [32.7881]
+o7 call [13.7508] [32.7881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1778,6 +3266,10 @@ F300.00000
 o7 call [11.2108] [32.3055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [11.2108] [30.2481]
+o7 call [13.7508] [30.2481]
+o7 call [13.7508] [32.7881]
+o7 call [11.2108] [32.7881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1786,6 +3278,17 @@ F300.00000
 o7 call [8.9248] [32.3055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [8.8232] [32.2293]
+o7 call [8.6454] [31.7975]
+o7 call [8.6708] [31.2133]
+o7 call [8.7978] [30.9339]
+o7 call [9.1788] [30.5021]
+o7 call [9.4074] [30.3243]
+o7 call [9.4328] [30.2481]
+o7 call [11.2108] [30.2481]
+o7 call [11.2108] [32.7881]
+o7 call [9.4074] [32.7627]
+o7 call [8.9248] [32.3309]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1794,6 +3297,16 @@ F300.00000
 o7 call [5.8768] [31.0101]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [5.8768] [29.0035]
+o7 call [8.0358] [28.9781]
+o7 call [8.0358] [29.3845]
+o7 call [8.239] [29.5877]
+o7 call [8.4168] [30.0195]
+o7 call [8.4168] [30.5275]
+o7 call [8.1374] [31.0609]
+o7 call [8.0358] [31.1625]
+o7 call [8.0358] [31.5181]
+o7 call [5.9022] [31.5181]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1802,6 +3315,19 @@ F300.00000
 o7 call [2.9812] [31.0101]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [2.9812] [29.0035]
+o7 call [3.8956] [29.0035]
+o7 call [3.9972] [28.9019]
+o7 call [3.9972] [28.7495]
+o7 call [4.2512] [28.4955]
+o7 call [5.0386] [28.5209]
+o7 call [5.2418] [28.7241]
+o7 call [5.2164] [28.9019]
+o7 call [5.318] [29.0035]
+o7 call [5.8768] [29.0035]
+o7 call [5.8514] [31.5181]
+o7 call [3.0066] [31.5181]
+o7 call [2.9812] [31.1371]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1810,6 +3336,18 @@ F300.00000
 o7 call [67.0908] [29.7655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [67.0908] [27.7081]
+o7 call [68.9196] [27.7081]
+o7 call [69.0974] [27.9367]
+o7 call [69.326] [28.1145]
+o7 call [69.5038] [28.3431]
+o7 call [69.6562] [28.8003]
+o7 call [69.6562] [29.2067]
+o7 call [69.5546] [29.5115]
+o7 call [69.4022] [29.7655]
+o7 call [68.9704] [30.1465]
+o7 call [68.9196] [30.2481]
+o7 call [67.0908] [30.2481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1818,6 +3356,10 @@ F300.00000
 o7 call [64.5508] [29.7655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [64.5508] [27.7081]
+o7 call [67.0908] [27.7081]
+o7 call [67.0908] [30.2481]
+o7 call [64.5508] [30.2481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1826,6 +3368,10 @@ F300.00000
 o7 call [62.0108] [29.7655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [62.0108] [27.7081]
+o7 call [64.5508] [27.7081]
+o7 call [64.5508] [30.2481]
+o7 call [62.0108] [30.2481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1834,6 +3380,10 @@ F300.00000
 o7 call [59.4708] [29.7655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [59.4708] [27.7081]
+o7 call [62.0108] [27.7081]
+o7 call [62.0108] [30.2481]
+o7 call [59.4708] [30.2481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1842,6 +3392,10 @@ F300.00000
 o7 call [56.9308] [29.7655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [56.9308] [27.7081]
+o7 call [59.4708] [27.7081]
+o7 call [59.4708] [30.2481]
+o7 call [56.9308] [30.2481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1850,6 +3404,10 @@ F300.00000
 o7 call [54.3908] [29.7655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [54.3908] [27.7081]
+o7 call [56.9308] [27.7081]
+o7 call [56.9308] [30.2481]
+o7 call [54.3908] [30.2481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1858,6 +3416,10 @@ F300.00000
 o7 call [51.8508] [29.7655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [51.8508] [27.7081]
+o7 call [54.3908] [27.7081]
+o7 call [54.3908] [30.2481]
+o7 call [51.8508] [30.2481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1866,6 +3428,10 @@ F300.00000
 o7 call [49.3108] [29.7655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [49.3108] [27.7081]
+o7 call [51.8508] [27.7081]
+o7 call [51.8508] [30.2481]
+o7 call [49.3108] [30.2481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1874,6 +3440,10 @@ F300.00000
 o7 call [46.7708] [29.7655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [46.7708] [27.7081]
+o7 call [49.3108] [27.7081]
+o7 call [49.3108] [30.2481]
+o7 call [46.7708] [30.2481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1882,6 +3452,10 @@ F300.00000
 o7 call [44.2308] [29.7655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [44.2308] [27.7081]
+o7 call [46.7708] [27.7081]
+o7 call [46.7708] [30.2481]
+o7 call [44.2308] [30.2481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1890,6 +3464,10 @@ F300.00000
 o7 call [41.6908] [29.7655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [41.6908] [27.7081]
+o7 call [44.2308] [27.7081]
+o7 call [44.2308] [30.2481]
+o7 call [41.6908] [30.2481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1898,6 +3476,10 @@ F300.00000
 o7 call [39.1508] [29.7655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [39.1508] [27.7081]
+o7 call [41.6908] [27.7081]
+o7 call [41.6908] [30.2481]
+o7 call [39.1508] [30.2481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1906,6 +3488,10 @@ F300.00000
 o7 call [36.6108] [29.7655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [36.6108] [27.7081]
+o7 call [39.1508] [27.7081]
+o7 call [39.1508] [30.2481]
+o7 call [36.6108] [30.2481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1914,6 +3500,10 @@ F300.00000
 o7 call [34.0708] [29.7655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [34.0708] [27.7081]
+o7 call [36.6108] [27.7081]
+o7 call [36.6108] [30.2481]
+o7 call [34.0708] [30.2481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1922,6 +3512,10 @@ F300.00000
 o7 call [31.5308] [29.7655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [31.5308] [27.7081]
+o7 call [34.0708] [27.7081]
+o7 call [34.0708] [30.2481]
+o7 call [31.5308] [30.2481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1930,6 +3524,10 @@ F300.00000
 o7 call [28.9908] [29.7655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [28.9908] [27.7081]
+o7 call [31.5308] [27.7081]
+o7 call [31.5308] [30.2481]
+o7 call [28.9908] [30.2481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1938,6 +3536,10 @@ F300.00000
 o7 call [26.4508] [29.7655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [26.4508] [27.7081]
+o7 call [28.9908] [27.7081]
+o7 call [28.9908] [30.2481]
+o7 call [26.4508] [30.2481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1946,6 +3548,10 @@ F300.00000
 o7 call [23.9108] [29.7655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [23.9108] [27.7081]
+o7 call [26.4508] [27.7081]
+o7 call [26.4508] [30.2481]
+o7 call [23.9108] [30.2481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1954,6 +3560,10 @@ F300.00000
 o7 call [21.3708] [29.7655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [21.3708] [27.7081]
+o7 call [23.9108] [27.7081]
+o7 call [23.9108] [30.2481]
+o7 call [21.3708] [30.2481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1962,6 +3572,10 @@ F300.00000
 o7 call [18.8308] [29.7655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [18.8308] [27.7081]
+o7 call [21.3708] [27.7081]
+o7 call [21.3708] [30.2481]
+o7 call [18.8308] [30.2481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1970,6 +3584,10 @@ F300.00000
 o7 call [16.2908] [29.7655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [16.2908] [27.7081]
+o7 call [18.8308] [27.7081]
+o7 call [18.8308] [30.2481]
+o7 call [16.2908] [30.2481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1978,6 +3596,10 @@ F300.00000
 o7 call [13.7508] [29.7655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [13.7508] [27.7081]
+o7 call [16.2908] [27.7081]
+o7 call [16.2908] [30.2481]
+o7 call [13.7508] [30.2481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1986,6 +3608,10 @@ F300.00000
 o7 call [11.2108] [29.7655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [11.2108] [27.7081]
+o7 call [13.7508] [27.7081]
+o7 call [13.7508] [30.2481]
+o7 call [11.2108] [30.2481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -1994,6 +3620,17 @@ F300.00000
 o7 call [8.9248] [29.7655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [8.8232] [29.6893]
+o7 call [8.6454] [29.2575]
+o7 call [8.6708] [28.6733]
+o7 call [8.7978] [28.3939]
+o7 call [9.1788] [27.9621]
+o7 call [9.4074] [27.7843]
+o7 call [9.4328] [27.7081]
+o7 call [11.2108] [27.7081]
+o7 call [11.2108] [30.2481]
+o7 call [9.4074] [30.2227]
+o7 call [8.9248] [29.7909]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2002,6 +3639,28 @@ F300.00000
 o7 call [6.1308] [28.4701]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [5.9276] [28.1907]
+o7 call [5.826] [28.1907]
+o7 call [5.7498] [28.3177]
+o7 call [5.6228] [28.3431]
+o7 call [5.4196] [28.1399]
+o7 call [5.3942] [27.3525]
+o7 call [5.6482] [27.0985]
+o7 call [5.7244] [27.1239]
+o7 call [5.8006] [27.2509]
+o7 call [5.953] [27.2509]
+o7 call [6.0546] [27.1493]
+o7 call [6.1562] [26.9461]
+o7 call [6.1816] [26.4635]
+o7 call [8.0104] [26.4635]
+o7 call [8.0358] [26.8445]
+o7 call [8.239] [27.0477]
+o7 call [8.4168] [27.4795]
+o7 call [8.4168] [27.9875]
+o7 call [8.1374] [28.5209]
+o7 call [8.0358] [28.6225]
+o7 call [8.0358] [28.9781]
+o7 call [6.1308] [28.9527]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2010,6 +3669,18 @@ F300.00000
 o7 call [67.0908] [27.2255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [67.0908] [25.1681]
+o7 call [68.9196] [25.1681]
+o7 call [69.0974] [25.3967]
+o7 call [69.326] [25.5745]
+o7 call [69.5038] [25.8031]
+o7 call [69.6562] [26.2603]
+o7 call [69.6562] [26.6667]
+o7 call [69.5546] [26.9715]
+o7 call [69.4022] [27.2255]
+o7 call [68.9704] [27.6065]
+o7 call [68.9196] [27.7081]
+o7 call [67.0908] [27.7081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2018,6 +3689,10 @@ F300.00000
 o7 call [64.5508] [27.2255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [64.5508] [25.1681]
+o7 call [67.0908] [25.1681]
+o7 call [67.0908] [27.7081]
+o7 call [64.5508] [27.7081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2026,6 +3701,10 @@ F300.00000
 o7 call [62.0108] [27.2255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [62.0108] [25.1681]
+o7 call [64.5508] [25.1681]
+o7 call [64.5508] [27.7081]
+o7 call [62.0108] [27.7081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2034,6 +3713,10 @@ F300.00000
 o7 call [59.4708] [27.2255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [59.4708] [25.1681]
+o7 call [62.0108] [25.1681]
+o7 call [62.0108] [27.7081]
+o7 call [59.4708] [27.7081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2042,6 +3725,10 @@ F300.00000
 o7 call [56.9308] [27.2255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [56.9308] [25.1681]
+o7 call [59.4708] [25.1681]
+o7 call [59.4708] [27.7081]
+o7 call [56.9308] [27.7081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2050,6 +3737,10 @@ F300.00000
 o7 call [54.3908] [27.2255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [54.3908] [25.1681]
+o7 call [56.9308] [25.1681]
+o7 call [56.9308] [27.7081]
+o7 call [54.3908] [27.7081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2058,6 +3749,10 @@ F300.00000
 o7 call [51.8508] [27.2255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [51.8508] [25.1681]
+o7 call [54.3908] [25.1681]
+o7 call [54.3908] [27.7081]
+o7 call [51.8508] [27.7081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2066,6 +3761,10 @@ F300.00000
 o7 call [49.3108] [27.2255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [49.3108] [25.1681]
+o7 call [51.8508] [25.1681]
+o7 call [51.8508] [27.7081]
+o7 call [49.3108] [27.7081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2074,6 +3773,10 @@ F300.00000
 o7 call [46.7708] [27.2255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [46.7708] [25.1681]
+o7 call [49.3108] [25.1681]
+o7 call [49.3108] [27.7081]
+o7 call [46.7708] [27.7081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2082,6 +3785,10 @@ F300.00000
 o7 call [44.2308] [27.2255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [44.2308] [25.1681]
+o7 call [46.7708] [25.1681]
+o7 call [46.7708] [27.7081]
+o7 call [44.2308] [27.7081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2090,6 +3797,10 @@ F300.00000
 o7 call [41.6908] [27.2255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [41.6908] [25.1681]
+o7 call [44.2308] [25.1681]
+o7 call [44.2308] [27.7081]
+o7 call [41.6908] [27.7081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2098,6 +3809,10 @@ F300.00000
 o7 call [39.1508] [27.2255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [39.1508] [25.1681]
+o7 call [41.6908] [25.1681]
+o7 call [41.6908] [27.7081]
+o7 call [39.1508] [27.7081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2106,6 +3821,10 @@ F300.00000
 o7 call [36.6108] [27.2255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [36.6108] [25.1681]
+o7 call [39.1508] [25.1681]
+o7 call [39.1508] [27.7081]
+o7 call [36.6108] [27.7081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2114,6 +3833,10 @@ F300.00000
 o7 call [34.0708] [27.2255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [34.0708] [25.1681]
+o7 call [36.6108] [25.1681]
+o7 call [36.6108] [27.7081]
+o7 call [34.0708] [27.7081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2122,6 +3845,10 @@ F300.00000
 o7 call [31.5308] [27.2255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [31.5308] [25.1681]
+o7 call [34.0708] [25.1681]
+o7 call [34.0708] [27.7081]
+o7 call [31.5308] [27.7081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2130,6 +3857,10 @@ F300.00000
 o7 call [28.9908] [27.2255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [28.9908] [25.1681]
+o7 call [31.5308] [25.1681]
+o7 call [31.5308] [27.7081]
+o7 call [28.9908] [27.7081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2138,6 +3869,10 @@ F300.00000
 o7 call [26.4508] [27.2255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [26.4508] [25.1681]
+o7 call [28.9908] [25.1681]
+o7 call [28.9908] [27.7081]
+o7 call [26.4508] [27.7081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2146,6 +3881,10 @@ F300.00000
 o7 call [23.9108] [27.2255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [23.9108] [25.1681]
+o7 call [26.4508] [25.1681]
+o7 call [26.4508] [27.7081]
+o7 call [23.9108] [27.7081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2154,6 +3893,10 @@ F300.00000
 o7 call [21.3708] [27.2255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [21.3708] [25.1681]
+o7 call [23.9108] [25.1681]
+o7 call [23.9108] [27.7081]
+o7 call [21.3708] [27.7081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2162,6 +3905,10 @@ F300.00000
 o7 call [18.8308] [27.2255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [18.8308] [25.1681]
+o7 call [21.3708] [25.1681]
+o7 call [21.3708] [27.7081]
+o7 call [18.8308] [27.7081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2170,6 +3917,10 @@ F300.00000
 o7 call [16.2908] [27.2255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [16.2908] [25.1681]
+o7 call [18.8308] [25.1681]
+o7 call [18.8308] [27.7081]
+o7 call [16.2908] [27.7081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2178,6 +3929,10 @@ F300.00000
 o7 call [13.7508] [27.2255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [13.7508] [25.1681]
+o7 call [16.2908] [25.1681]
+o7 call [16.2908] [27.7081]
+o7 call [13.7508] [27.7081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2186,6 +3941,10 @@ F300.00000
 o7 call [11.2108] [27.2255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [11.2108] [25.1681]
+o7 call [13.7508] [25.1681]
+o7 call [13.7508] [27.7081]
+o7 call [11.2108] [27.7081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2194,6 +3953,17 @@ F300.00000
 o7 call [8.9248] [27.2255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [8.8232] [27.1493]
+o7 call [8.6454] [26.7175]
+o7 call [8.6708] [26.1333]
+o7 call [8.7978] [25.8539]
+o7 call [9.1788] [25.4221]
+o7 call [9.4074] [25.2443]
+o7 call [9.4328] [25.1681]
+o7 call [11.2108] [25.1681]
+o7 call [11.2108] [27.7081]
+o7 call [9.4074] [27.6827]
+o7 call [8.9248] [27.2509]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2202,6 +3972,18 @@ F300.00000
 o7 call [67.0908] [24.6855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [67.0908] [22.6281]
+o7 call [68.9196] [22.6281]
+o7 call [69.0974] [22.8567]
+o7 call [69.326] [23.0345]
+o7 call [69.5038] [23.2631]
+o7 call [69.6562] [23.7203]
+o7 call [69.6562] [24.1267]
+o7 call [69.5546] [24.4315]
+o7 call [69.4022] [24.6855]
+o7 call [68.9704] [25.0665]
+o7 call [68.9196] [25.1681]
+o7 call [67.0908] [25.1681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2210,6 +3992,10 @@ F300.00000
 o7 call [64.5508] [24.6855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [64.5508] [22.6281]
+o7 call [67.0908] [22.6281]
+o7 call [67.0908] [25.1681]
+o7 call [64.5508] [25.1681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2218,6 +4004,10 @@ F300.00000
 o7 call [62.0108] [24.6855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [62.0108] [22.6281]
+o7 call [64.5508] [22.6281]
+o7 call [64.5508] [25.1681]
+o7 call [62.0108] [25.1681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2226,6 +4016,10 @@ F300.00000
 o7 call [59.4708] [24.6855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [59.4708] [22.6281]
+o7 call [62.0108] [22.6281]
+o7 call [62.0108] [25.1681]
+o7 call [59.4708] [25.1681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2234,6 +4028,10 @@ F300.00000
 o7 call [56.9308] [24.6855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [56.9308] [22.6281]
+o7 call [59.4708] [22.6281]
+o7 call [59.4708] [25.1681]
+o7 call [56.9308] [25.1681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2242,6 +4040,10 @@ F300.00000
 o7 call [54.3908] [24.6855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [54.3908] [22.6281]
+o7 call [56.9308] [22.6281]
+o7 call [56.9308] [25.1681]
+o7 call [54.3908] [25.1681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2250,6 +4052,10 @@ F300.00000
 o7 call [51.8508] [24.6855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [51.8508] [22.6281]
+o7 call [54.3908] [22.6281]
+o7 call [54.3908] [25.1681]
+o7 call [51.8508] [25.1681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2258,6 +4064,10 @@ F300.00000
 o7 call [49.3108] [24.6855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [49.3108] [22.6281]
+o7 call [51.8508] [22.6281]
+o7 call [51.8508] [25.1681]
+o7 call [49.3108] [25.1681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2266,6 +4076,10 @@ F300.00000
 o7 call [46.7708] [24.6855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [46.7708] [22.6281]
+o7 call [49.3108] [22.6281]
+o7 call [49.3108] [25.1681]
+o7 call [46.7708] [25.1681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2274,6 +4088,10 @@ F300.00000
 o7 call [44.2308] [24.6855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [44.2308] [22.6281]
+o7 call [46.7708] [22.6281]
+o7 call [46.7708] [25.1681]
+o7 call [44.2308] [25.1681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2282,6 +4100,10 @@ F300.00000
 o7 call [41.6908] [24.6855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [41.6908] [22.6281]
+o7 call [44.2308] [22.6281]
+o7 call [44.2308] [25.1681]
+o7 call [41.6908] [25.1681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2290,6 +4112,10 @@ F300.00000
 o7 call [39.1508] [24.6855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [39.1508] [22.6281]
+o7 call [41.6908] [22.6281]
+o7 call [41.6908] [25.1681]
+o7 call [39.1508] [25.1681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2298,6 +4124,10 @@ F300.00000
 o7 call [36.6108] [24.6855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [36.6108] [22.6281]
+o7 call [39.1508] [22.6281]
+o7 call [39.1508] [25.1681]
+o7 call [36.6108] [25.1681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2306,6 +4136,10 @@ F300.00000
 o7 call [34.0708] [24.6855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [34.0708] [22.6281]
+o7 call [36.6108] [22.6281]
+o7 call [36.6108] [25.1681]
+o7 call [34.0708] [25.1681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2314,6 +4148,10 @@ F300.00000
 o7 call [31.5308] [24.6855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [31.5308] [22.6281]
+o7 call [34.0708] [22.6281]
+o7 call [34.0708] [25.1681]
+o7 call [31.5308] [25.1681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2322,6 +4160,10 @@ F300.00000
 o7 call [28.9908] [24.6855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [28.9908] [22.6281]
+o7 call [31.5308] [22.6281]
+o7 call [31.5308] [25.1681]
+o7 call [28.9908] [25.1681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2330,6 +4172,10 @@ F300.00000
 o7 call [26.4508] [24.6855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [26.4508] [22.6281]
+o7 call [28.9908] [22.6281]
+o7 call [28.9908] [25.1681]
+o7 call [26.4508] [25.1681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2338,6 +4184,10 @@ F300.00000
 o7 call [23.9108] [24.6855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [23.9108] [22.6281]
+o7 call [26.4508] [22.6281]
+o7 call [26.4508] [25.1681]
+o7 call [23.9108] [25.1681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2346,6 +4196,10 @@ F300.00000
 o7 call [21.3708] [24.6855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [21.3708] [22.6281]
+o7 call [23.9108] [22.6281]
+o7 call [23.9108] [25.1681]
+o7 call [21.3708] [25.1681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2354,6 +4208,10 @@ F300.00000
 o7 call [18.8308] [24.6855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [18.8308] [22.6281]
+o7 call [21.3708] [22.6281]
+o7 call [21.3708] [25.1681]
+o7 call [18.8308] [25.1681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2362,6 +4220,10 @@ F300.00000
 o7 call [16.2908] [24.6855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [16.2908] [22.6281]
+o7 call [18.8308] [22.6281]
+o7 call [18.8308] [25.1681]
+o7 call [16.2908] [25.1681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2370,6 +4232,10 @@ F300.00000
 o7 call [13.7508] [24.6855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [13.7508] [22.6281]
+o7 call [16.2908] [22.6281]
+o7 call [16.2908] [25.1681]
+o7 call [13.7508] [25.1681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2378,6 +4244,10 @@ F300.00000
 o7 call [11.2108] [24.6855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [11.2108] [22.6281]
+o7 call [13.7508] [22.6281]
+o7 call [13.7508] [25.1681]
+o7 call [11.2108] [25.1681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2386,6 +4256,17 @@ F300.00000
 o7 call [8.9248] [24.6855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [8.8232] [24.6093]
+o7 call [8.6454] [24.1775]
+o7 call [8.6708] [23.5933]
+o7 call [8.7978] [23.3139]
+o7 call [9.1788] [22.8821]
+o7 call [9.4074] [22.7043]
+o7 call [9.4328] [22.6281]
+o7 call [11.2108] [22.6281]
+o7 call [11.2108] [25.1681]
+o7 call [9.4074] [25.1427]
+o7 call [8.9248] [24.7109]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2394,6 +4275,18 @@ F300.00000
 o7 call [67.0908] [22.1455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [67.0908] [20.0881]
+o7 call [68.9196] [20.0881]
+o7 call [69.0974] [20.3167]
+o7 call [69.326] [20.4945]
+o7 call [69.5038] [20.7231]
+o7 call [69.6562] [21.1803]
+o7 call [69.6562] [21.5867]
+o7 call [69.5546] [21.8915]
+o7 call [69.4022] [22.1455]
+o7 call [68.9704] [22.5265]
+o7 call [68.9196] [22.6281]
+o7 call [67.0908] [22.6281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2402,6 +4295,10 @@ F300.00000
 o7 call [64.5508] [22.1455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [64.5508] [20.0881]
+o7 call [67.0908] [20.0881]
+o7 call [67.0908] [22.6281]
+o7 call [64.5508] [22.6281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2410,6 +4307,10 @@ F300.00000
 o7 call [62.0108] [22.1455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [62.0108] [20.0881]
+o7 call [64.5508] [20.0881]
+o7 call [64.5508] [22.6281]
+o7 call [62.0108] [22.6281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2418,6 +4319,10 @@ F300.00000
 o7 call [59.4708] [22.1455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [59.4708] [20.0881]
+o7 call [62.0108] [20.0881]
+o7 call [62.0108] [22.6281]
+o7 call [59.4708] [22.6281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2426,6 +4331,10 @@ F300.00000
 o7 call [56.9308] [22.1455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [56.9308] [20.0881]
+o7 call [59.4708] [20.0881]
+o7 call [59.4708] [22.6281]
+o7 call [56.9308] [22.6281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2434,6 +4343,10 @@ F300.00000
 o7 call [54.3908] [22.1455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [54.3908] [20.0881]
+o7 call [56.9308] [20.0881]
+o7 call [56.9308] [22.6281]
+o7 call [54.3908] [22.6281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2442,6 +4355,10 @@ F300.00000
 o7 call [51.8508] [22.1455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [51.8508] [20.0881]
+o7 call [54.3908] [20.0881]
+o7 call [54.3908] [22.6281]
+o7 call [51.8508] [22.6281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2450,6 +4367,10 @@ F300.00000
 o7 call [49.3108] [22.1455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [49.3108] [20.0881]
+o7 call [51.8508] [20.0881]
+o7 call [51.8508] [22.6281]
+o7 call [49.3108] [22.6281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2458,6 +4379,10 @@ F300.00000
 o7 call [46.7708] [22.1455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [46.7708] [20.0881]
+o7 call [49.3108] [20.0881]
+o7 call [49.3108] [22.6281]
+o7 call [46.7708] [22.6281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2466,6 +4391,10 @@ F300.00000
 o7 call [44.2308] [22.1455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [44.2308] [20.0881]
+o7 call [46.7708] [20.0881]
+o7 call [46.7708] [22.6281]
+o7 call [44.2308] [22.6281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2474,6 +4403,10 @@ F300.00000
 o7 call [41.6908] [22.1455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [41.6908] [20.0881]
+o7 call [44.2308] [20.0881]
+o7 call [44.2308] [22.6281]
+o7 call [41.6908] [22.6281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2482,6 +4415,10 @@ F300.00000
 o7 call [39.1508] [22.1455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [39.1508] [20.0881]
+o7 call [41.6908] [20.0881]
+o7 call [41.6908] [22.6281]
+o7 call [39.1508] [22.6281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2490,6 +4427,10 @@ F300.00000
 o7 call [36.6108] [22.1455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [36.6108] [20.0881]
+o7 call [39.1508] [20.0881]
+o7 call [39.1508] [22.6281]
+o7 call [36.6108] [22.6281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2498,6 +4439,10 @@ F300.00000
 o7 call [34.0708] [22.1455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [34.0708] [20.0881]
+o7 call [36.6108] [20.0881]
+o7 call [36.6108] [22.6281]
+o7 call [34.0708] [22.6281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2506,6 +4451,10 @@ F300.00000
 o7 call [31.5308] [22.1455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [31.5308] [20.0881]
+o7 call [34.0708] [20.0881]
+o7 call [34.0708] [22.6281]
+o7 call [31.5308] [22.6281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2514,6 +4463,10 @@ F300.00000
 o7 call [28.9908] [22.1455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [28.9908] [20.0881]
+o7 call [31.5308] [20.0881]
+o7 call [31.5308] [22.6281]
+o7 call [28.9908] [22.6281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2522,6 +4475,10 @@ F300.00000
 o7 call [26.4508] [22.1455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [26.4508] [20.0881]
+o7 call [28.9908] [20.0881]
+o7 call [28.9908] [22.6281]
+o7 call [26.4508] [22.6281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2530,6 +4487,10 @@ F300.00000
 o7 call [23.9108] [22.1455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [23.9108] [20.0881]
+o7 call [26.4508] [20.0881]
+o7 call [26.4508] [22.6281]
+o7 call [23.9108] [22.6281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2538,6 +4499,10 @@ F300.00000
 o7 call [21.3708] [22.1455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [21.3708] [20.0881]
+o7 call [23.9108] [20.0881]
+o7 call [23.9108] [22.6281]
+o7 call [21.3708] [22.6281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2546,6 +4511,10 @@ F300.00000
 o7 call [18.8308] [22.1455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [18.8308] [20.0881]
+o7 call [21.3708] [20.0881]
+o7 call [21.3708] [22.6281]
+o7 call [18.8308] [22.6281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2554,6 +4523,10 @@ F300.00000
 o7 call [16.2908] [22.1455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [16.2908] [20.0881]
+o7 call [18.8308] [20.0881]
+o7 call [18.8308] [22.6281]
+o7 call [16.2908] [22.6281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2562,6 +4535,10 @@ F300.00000
 o7 call [13.7508] [22.1455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [13.7508] [20.0881]
+o7 call [16.2908] [20.0881]
+o7 call [16.2908] [22.6281]
+o7 call [13.7508] [22.6281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2570,6 +4547,10 @@ F300.00000
 o7 call [11.2108] [22.1455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [11.2108] [20.0881]
+o7 call [13.7508] [20.0881]
+o7 call [13.7508] [22.6281]
+o7 call [11.2108] [22.6281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2578,6 +4559,17 @@ F300.00000
 o7 call [8.9248] [22.1455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [8.8232] [22.0693]
+o7 call [8.6454] [21.6375]
+o7 call [8.6708] [21.0533]
+o7 call [8.7978] [20.7739]
+o7 call [9.1788] [20.3421]
+o7 call [9.4074] [20.1643]
+o7 call [9.4328] [20.0881]
+o7 call [11.2108] [20.0881]
+o7 call [11.2108] [22.6281]
+o7 call [9.4074] [22.6027]
+o7 call [8.9248] [22.1709]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2586,6 +4578,18 @@ F300.00000
 o7 call [67.0908] [19.6055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [67.0908] [17.5481]
+o7 call [68.9196] [17.5481]
+o7 call [69.0974] [17.7767]
+o7 call [69.326] [17.9545]
+o7 call [69.5038] [18.1831]
+o7 call [69.6562] [18.6403]
+o7 call [69.6562] [19.0467]
+o7 call [69.5546] [19.3515]
+o7 call [69.4022] [19.6055]
+o7 call [68.9704] [19.9865]
+o7 call [68.9196] [20.0881]
+o7 call [67.0908] [20.0881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2594,6 +4598,10 @@ F300.00000
 o7 call [64.5508] [19.6055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [64.5508] [17.5481]
+o7 call [67.0908] [17.5481]
+o7 call [67.0908] [20.0881]
+o7 call [64.5508] [20.0881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2602,6 +4610,10 @@ F300.00000
 o7 call [62.0108] [19.6055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [62.0108] [17.5481]
+o7 call [64.5508] [17.5481]
+o7 call [64.5508] [20.0881]
+o7 call [62.0108] [20.0881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2610,6 +4622,10 @@ F300.00000
 o7 call [59.4708] [19.6055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [59.4708] [17.5481]
+o7 call [62.0108] [17.5481]
+o7 call [62.0108] [20.0881]
+o7 call [59.4708] [20.0881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2618,6 +4634,10 @@ F300.00000
 o7 call [56.9308] [19.6055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [56.9308] [17.5481]
+o7 call [59.4708] [17.5481]
+o7 call [59.4708] [20.0881]
+o7 call [56.9308] [20.0881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2626,6 +4646,10 @@ F300.00000
 o7 call [54.3908] [19.6055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [54.3908] [17.5481]
+o7 call [56.9308] [17.5481]
+o7 call [56.9308] [20.0881]
+o7 call [54.3908] [20.0881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2634,6 +4658,10 @@ F300.00000
 o7 call [51.8508] [19.6055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [51.8508] [17.5481]
+o7 call [54.3908] [17.5481]
+o7 call [54.3908] [20.0881]
+o7 call [51.8508] [20.0881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2642,6 +4670,10 @@ F300.00000
 o7 call [49.3108] [19.6055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [49.3108] [17.5481]
+o7 call [51.8508] [17.5481]
+o7 call [51.8508] [20.0881]
+o7 call [49.3108] [20.0881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2650,6 +4682,10 @@ F300.00000
 o7 call [46.7708] [19.6055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [46.7708] [17.5481]
+o7 call [49.3108] [17.5481]
+o7 call [49.3108] [20.0881]
+o7 call [46.7708] [20.0881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2658,6 +4694,10 @@ F300.00000
 o7 call [44.2308] [19.6055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [44.2308] [17.5481]
+o7 call [46.7708] [17.5481]
+o7 call [46.7708] [20.0881]
+o7 call [44.2308] [20.0881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2666,6 +4706,10 @@ F300.00000
 o7 call [41.6908] [19.6055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [41.6908] [17.5481]
+o7 call [44.2308] [17.5481]
+o7 call [44.2308] [20.0881]
+o7 call [41.6908] [20.0881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2674,6 +4718,10 @@ F300.00000
 o7 call [39.1508] [19.6055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [39.1508] [17.5481]
+o7 call [41.6908] [17.5481]
+o7 call [41.6908] [20.0881]
+o7 call [39.1508] [20.0881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2682,6 +4730,10 @@ F300.00000
 o7 call [36.6108] [19.6055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [36.6108] [17.5481]
+o7 call [39.1508] [17.5481]
+o7 call [39.1508] [20.0881]
+o7 call [36.6108] [20.0881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2690,6 +4742,10 @@ F300.00000
 o7 call [34.0708] [19.6055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [34.0708] [17.5481]
+o7 call [36.6108] [17.5481]
+o7 call [36.6108] [20.0881]
+o7 call [34.0708] [20.0881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2698,6 +4754,10 @@ F300.00000
 o7 call [31.5308] [19.6055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [31.5308] [17.5481]
+o7 call [34.0708] [17.5481]
+o7 call [34.0708] [20.0881]
+o7 call [31.5308] [20.0881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2706,6 +4766,10 @@ F300.00000
 o7 call [28.9908] [19.6055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [28.9908] [17.5481]
+o7 call [31.5308] [17.5481]
+o7 call [31.5308] [20.0881]
+o7 call [28.9908] [20.0881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2714,6 +4778,10 @@ F300.00000
 o7 call [26.4508] [19.6055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [26.4508] [17.5481]
+o7 call [28.9908] [17.5481]
+o7 call [28.9908] [20.0881]
+o7 call [26.4508] [20.0881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2722,6 +4790,10 @@ F300.00000
 o7 call [23.9108] [19.6055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [23.9108] [17.5481]
+o7 call [26.4508] [17.5481]
+o7 call [26.4508] [20.0881]
+o7 call [23.9108] [20.0881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2730,6 +4802,10 @@ F300.00000
 o7 call [21.3708] [19.6055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [21.3708] [17.5481]
+o7 call [23.9108] [17.5481]
+o7 call [23.9108] [20.0881]
+o7 call [21.3708] [20.0881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2738,6 +4814,10 @@ F300.00000
 o7 call [18.8308] [19.6055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [18.8308] [17.5481]
+o7 call [21.3708] [17.5481]
+o7 call [21.3708] [20.0881]
+o7 call [18.8308] [20.0881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2746,6 +4826,10 @@ F300.00000
 o7 call [16.2908] [19.6055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [16.2908] [17.5481]
+o7 call [18.8308] [17.5481]
+o7 call [18.8308] [20.0881]
+o7 call [16.2908] [20.0881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2754,6 +4838,10 @@ F300.00000
 o7 call [13.7508] [19.6055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [13.7508] [17.5481]
+o7 call [16.2908] [17.5481]
+o7 call [16.2908] [20.0881]
+o7 call [13.7508] [20.0881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2762,6 +4850,10 @@ F300.00000
 o7 call [11.2108] [19.6055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [11.2108] [17.5481]
+o7 call [13.7508] [17.5481]
+o7 call [13.7508] [20.0881]
+o7 call [11.2108] [20.0881]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2770,6 +4862,17 @@ F300.00000
 o7 call [8.9248] [19.6055]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [8.8232] [19.5293]
+o7 call [8.6454] [19.0975]
+o7 call [8.6708] [18.5133]
+o7 call [8.7978] [18.2339]
+o7 call [9.1788] [17.8021]
+o7 call [9.4074] [17.6243]
+o7 call [9.4328] [17.5481]
+o7 call [11.2108] [17.5481]
+o7 call [11.2108] [20.0881]
+o7 call [9.4074] [20.0627]
+o7 call [8.9248] [19.6309]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2778,6 +4881,18 @@ F300.00000
 o7 call [67.0908] [17.0655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [67.0908] [15.0081]
+o7 call [68.9196] [15.0081]
+o7 call [69.0974] [15.2367]
+o7 call [69.326] [15.4145]
+o7 call [69.5038] [15.6431]
+o7 call [69.6562] [16.1003]
+o7 call [69.6562] [16.5067]
+o7 call [69.5546] [16.8115]
+o7 call [69.4022] [17.0655]
+o7 call [68.9704] [17.4465]
+o7 call [68.9196] [17.5481]
+o7 call [67.0908] [17.5481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2786,6 +4901,10 @@ F300.00000
 o7 call [64.5508] [17.0655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [64.5508] [15.0081]
+o7 call [67.0908] [15.0081]
+o7 call [67.0908] [17.5481]
+o7 call [64.5508] [17.5481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2794,6 +4913,10 @@ F300.00000
 o7 call [62.0108] [17.0655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [62.0108] [15.0081]
+o7 call [64.5508] [15.0081]
+o7 call [64.5508] [17.5481]
+o7 call [62.0108] [17.5481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2802,6 +4925,10 @@ F300.00000
 o7 call [59.4708] [17.0655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [59.4708] [15.0081]
+o7 call [62.0108] [15.0081]
+o7 call [62.0108] [17.5481]
+o7 call [59.4708] [17.5481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2810,6 +4937,10 @@ F300.00000
 o7 call [56.9308] [17.0655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [56.9308] [15.0081]
+o7 call [59.4708] [15.0081]
+o7 call [59.4708] [17.5481]
+o7 call [56.9308] [17.5481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2818,6 +4949,10 @@ F300.00000
 o7 call [54.3908] [17.0655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [54.3908] [15.0081]
+o7 call [56.9308] [15.0081]
+o7 call [56.9308] [17.5481]
+o7 call [54.3908] [17.5481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2826,6 +4961,10 @@ F300.00000
 o7 call [51.8508] [17.0655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [51.8508] [15.0081]
+o7 call [54.3908] [15.0081]
+o7 call [54.3908] [17.5481]
+o7 call [51.8508] [17.5481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2834,6 +4973,10 @@ F300.00000
 o7 call [49.3108] [17.0655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [49.3108] [15.0081]
+o7 call [51.8508] [15.0081]
+o7 call [51.8508] [17.5481]
+o7 call [49.3108] [17.5481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2842,6 +4985,10 @@ F300.00000
 o7 call [46.7708] [17.0655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [46.7708] [15.0081]
+o7 call [49.3108] [15.0081]
+o7 call [49.3108] [17.5481]
+o7 call [46.7708] [17.5481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2850,6 +4997,10 @@ F300.00000
 o7 call [44.2308] [17.0655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [44.2308] [15.0081]
+o7 call [46.7708] [15.0081]
+o7 call [46.7708] [17.5481]
+o7 call [44.2308] [17.5481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2858,6 +5009,10 @@ F300.00000
 o7 call [41.6908] [17.0655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [41.6908] [15.0081]
+o7 call [44.2308] [15.0081]
+o7 call [44.2308] [17.5481]
+o7 call [41.6908] [17.5481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2866,6 +5021,10 @@ F300.00000
 o7 call [39.1508] [17.0655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [39.1508] [15.0081]
+o7 call [41.6908] [15.0081]
+o7 call [41.6908] [17.5481]
+o7 call [39.1508] [17.5481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2874,6 +5033,10 @@ F300.00000
 o7 call [36.6108] [17.0655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [36.6108] [15.0081]
+o7 call [39.1508] [15.0081]
+o7 call [39.1508] [17.5481]
+o7 call [36.6108] [17.5481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2882,6 +5045,10 @@ F300.00000
 o7 call [34.0708] [17.0655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [34.0708] [15.0081]
+o7 call [36.6108] [15.0081]
+o7 call [36.6108] [17.5481]
+o7 call [34.0708] [17.5481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2890,6 +5057,10 @@ F300.00000
 o7 call [31.5308] [17.0655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [31.5308] [15.0081]
+o7 call [34.0708] [15.0081]
+o7 call [34.0708] [17.5481]
+o7 call [31.5308] [17.5481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2898,6 +5069,10 @@ F300.00000
 o7 call [28.9908] [17.0655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [28.9908] [15.0081]
+o7 call [31.5308] [15.0081]
+o7 call [31.5308] [17.5481]
+o7 call [28.9908] [17.5481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2906,6 +5081,10 @@ F300.00000
 o7 call [26.4508] [17.0655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [26.4508] [15.0081]
+o7 call [28.9908] [15.0081]
+o7 call [28.9908] [17.5481]
+o7 call [26.4508] [17.5481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2914,6 +5093,10 @@ F300.00000
 o7 call [23.9108] [17.0655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [23.9108] [15.0081]
+o7 call [26.4508] [15.0081]
+o7 call [26.4508] [17.5481]
+o7 call [23.9108] [17.5481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2922,6 +5105,10 @@ F300.00000
 o7 call [21.3708] [17.0655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [21.3708] [15.0081]
+o7 call [23.9108] [15.0081]
+o7 call [23.9108] [17.5481]
+o7 call [21.3708] [17.5481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2930,6 +5117,10 @@ F300.00000
 o7 call [18.8308] [17.0655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [18.8308] [15.0081]
+o7 call [21.3708] [15.0081]
+o7 call [21.3708] [17.5481]
+o7 call [18.8308] [17.5481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2938,6 +5129,10 @@ F300.00000
 o7 call [16.2908] [17.0655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [16.2908] [15.0081]
+o7 call [18.8308] [15.0081]
+o7 call [18.8308] [17.5481]
+o7 call [16.2908] [17.5481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2946,6 +5141,10 @@ F300.00000
 o7 call [13.7508] [17.0655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [13.7508] [15.0081]
+o7 call [16.2908] [15.0081]
+o7 call [16.2908] [17.5481]
+o7 call [13.7508] [17.5481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2954,6 +5153,10 @@ F300.00000
 o7 call [11.2108] [17.0655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [11.2108] [15.0081]
+o7 call [13.7508] [15.0081]
+o7 call [13.7508] [17.5481]
+o7 call [11.2108] [17.5481]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2962,6 +5165,17 @@ F300.00000
 o7 call [8.9248] [17.0655]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [8.8232] [16.9893]
+o7 call [8.6454] [16.5575]
+o7 call [8.6708] [15.9733]
+o7 call [8.7978] [15.6939]
+o7 call [9.1788] [15.2621]
+o7 call [9.4074] [15.0843]
+o7 call [9.4328] [15.0081]
+o7 call [11.2108] [15.0081]
+o7 call [11.2108] [17.5481]
+o7 call [9.4074] [17.5227]
+o7 call [8.9248] [17.0909]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2970,6 +5184,18 @@ F300.00000
 o7 call [67.0908] [14.5255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [67.0908] [12.4681]
+o7 call [68.9196] [12.4681]
+o7 call [69.0974] [12.6967]
+o7 call [69.326] [12.8745]
+o7 call [69.5038] [13.1031]
+o7 call [69.6562] [13.5603]
+o7 call [69.6562] [13.9667]
+o7 call [69.5546] [14.2715]
+o7 call [69.4022] [14.5255]
+o7 call [68.9704] [14.9065]
+o7 call [68.9196] [15.0081]
+o7 call [67.0908] [15.0081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2978,6 +5204,10 @@ F300.00000
 o7 call [64.5508] [14.5255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [64.5508] [12.4681]
+o7 call [67.0908] [12.4681]
+o7 call [67.0908] [15.0081]
+o7 call [64.5508] [15.0081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2986,6 +5216,10 @@ F300.00000
 o7 call [62.0108] [14.5255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [62.0108] [12.4681]
+o7 call [64.5508] [12.4681]
+o7 call [64.5508] [15.0081]
+o7 call [62.0108] [15.0081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -2994,6 +5228,10 @@ F300.00000
 o7 call [59.4708] [14.5255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [59.4708] [12.4681]
+o7 call [62.0108] [12.4681]
+o7 call [62.0108] [15.0081]
+o7 call [59.4708] [15.0081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3002,6 +5240,10 @@ F300.00000
 o7 call [56.9308] [14.5255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [56.9308] [12.4681]
+o7 call [59.4708] [12.4681]
+o7 call [59.4708] [15.0081]
+o7 call [56.9308] [15.0081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3010,6 +5252,10 @@ F300.00000
 o7 call [54.3908] [14.5255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [54.3908] [12.4681]
+o7 call [56.9308] [12.4681]
+o7 call [56.9308] [15.0081]
+o7 call [54.3908] [15.0081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3018,6 +5264,10 @@ F300.00000
 o7 call [51.8508] [14.5255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [51.8508] [12.4681]
+o7 call [54.3908] [12.4681]
+o7 call [54.3908] [15.0081]
+o7 call [51.8508] [15.0081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3026,6 +5276,10 @@ F300.00000
 o7 call [49.3108] [14.5255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [49.3108] [12.4681]
+o7 call [51.8508] [12.4681]
+o7 call [51.8508] [15.0081]
+o7 call [49.3108] [15.0081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3034,6 +5288,10 @@ F300.00000
 o7 call [46.7708] [14.5255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [46.7708] [12.4681]
+o7 call [49.3108] [12.4681]
+o7 call [49.3108] [15.0081]
+o7 call [46.7708] [15.0081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3042,6 +5300,10 @@ F300.00000
 o7 call [44.2308] [14.5255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [44.2308] [12.4681]
+o7 call [46.7708] [12.4681]
+o7 call [46.7708] [15.0081]
+o7 call [44.2308] [15.0081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3050,6 +5312,10 @@ F300.00000
 o7 call [41.6908] [14.5255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [41.6908] [12.4681]
+o7 call [44.2308] [12.4681]
+o7 call [44.2308] [15.0081]
+o7 call [41.6908] [15.0081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3058,6 +5324,10 @@ F300.00000
 o7 call [39.1508] [14.5255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [39.1508] [12.4681]
+o7 call [41.6908] [12.4681]
+o7 call [41.6908] [15.0081]
+o7 call [39.1508] [15.0081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3066,6 +5336,10 @@ F300.00000
 o7 call [36.6108] [14.5255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [36.6108] [12.4681]
+o7 call [39.1508] [12.4681]
+o7 call [39.1508] [15.0081]
+o7 call [36.6108] [15.0081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3074,6 +5348,10 @@ F300.00000
 o7 call [34.0708] [14.5255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [34.0708] [12.4681]
+o7 call [36.6108] [12.4681]
+o7 call [36.6108] [15.0081]
+o7 call [34.0708] [15.0081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3082,6 +5360,10 @@ F300.00000
 o7 call [31.5308] [14.5255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [31.5308] [12.4681]
+o7 call [34.0708] [12.4681]
+o7 call [34.0708] [15.0081]
+o7 call [31.5308] [15.0081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3090,6 +5372,10 @@ F300.00000
 o7 call [28.9908] [14.5255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [28.9908] [12.4681]
+o7 call [31.5308] [12.4681]
+o7 call [31.5308] [15.0081]
+o7 call [28.9908] [15.0081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3098,6 +5384,10 @@ F300.00000
 o7 call [26.4508] [14.5255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [26.4508] [12.4681]
+o7 call [28.9908] [12.4681]
+o7 call [28.9908] [15.0081]
+o7 call [26.4508] [15.0081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3106,6 +5396,10 @@ F300.00000
 o7 call [23.9108] [14.5255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [23.9108] [12.4681]
+o7 call [26.4508] [12.4681]
+o7 call [26.4508] [15.0081]
+o7 call [23.9108] [15.0081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3114,6 +5408,10 @@ F300.00000
 o7 call [21.3708] [14.5255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [21.3708] [12.4681]
+o7 call [23.9108] [12.4681]
+o7 call [23.9108] [15.0081]
+o7 call [21.3708] [15.0081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3122,6 +5420,10 @@ F300.00000
 o7 call [18.8308] [14.5255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [18.8308] [12.4681]
+o7 call [21.3708] [12.4681]
+o7 call [21.3708] [15.0081]
+o7 call [18.8308] [15.0081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3130,6 +5432,10 @@ F300.00000
 o7 call [16.2908] [14.5255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [16.2908] [12.4681]
+o7 call [18.8308] [12.4681]
+o7 call [18.8308] [15.0081]
+o7 call [16.2908] [15.0081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3138,6 +5444,10 @@ F300.00000
 o7 call [13.7508] [14.5255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [13.7508] [12.4681]
+o7 call [16.2908] [12.4681]
+o7 call [16.2908] [15.0081]
+o7 call [13.7508] [15.0081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3146,6 +5456,10 @@ F300.00000
 o7 call [11.2108] [14.5255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [11.2108] [12.4681]
+o7 call [13.7508] [12.4681]
+o7 call [13.7508] [15.0081]
+o7 call [11.2108] [15.0081]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3154,6 +5468,17 @@ F300.00000
 o7 call [8.9248] [14.5255]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [8.8232] [14.4493]
+o7 call [8.6454] [14.0175]
+o7 call [8.6708] [13.4333]
+o7 call [8.7978] [13.1539]
+o7 call [9.1788] [12.7221]
+o7 call [9.4074] [12.5443]
+o7 call [9.4328] [12.4681]
+o7 call [11.2108] [12.4681]
+o7 call [11.2108] [15.0081]
+o7 call [9.4074] [14.9827]
+o7 call [8.9248] [14.5509]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3162,6 +5487,18 @@ F300.00000
 o7 call [67.0908] [11.9855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [67.0908] [9.9281]
+o7 call [68.9196] [9.9281]
+o7 call [69.0974] [10.1567]
+o7 call [69.326] [10.3345]
+o7 call [69.5038] [10.5631]
+o7 call [69.6562] [11.0203]
+o7 call [69.6562] [11.4267]
+o7 call [69.5546] [11.7315]
+o7 call [69.4022] [11.9855]
+o7 call [68.9704] [12.3665]
+o7 call [68.9196] [12.4681]
+o7 call [67.0908] [12.4681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3170,6 +5507,10 @@ F300.00000
 o7 call [64.5508] [11.9855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [64.5508] [9.9281]
+o7 call [67.0908] [9.9281]
+o7 call [67.0908] [12.4681]
+o7 call [64.5508] [12.4681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3178,6 +5519,10 @@ F300.00000
 o7 call [62.0108] [11.9855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [62.0108] [9.9281]
+o7 call [64.5508] [9.9281]
+o7 call [64.5508] [12.4681]
+o7 call [62.0108] [12.4681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3186,6 +5531,10 @@ F300.00000
 o7 call [59.4708] [11.9855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [59.4708] [9.9281]
+o7 call [62.0108] [9.9281]
+o7 call [62.0108] [12.4681]
+o7 call [59.4708] [12.4681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3194,6 +5543,10 @@ F300.00000
 o7 call [56.9308] [11.9855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [56.9308] [9.9281]
+o7 call [59.4708] [9.9281]
+o7 call [59.4708] [12.4681]
+o7 call [56.9308] [12.4681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3202,6 +5555,10 @@ F300.00000
 o7 call [54.3908] [11.9855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [54.3908] [9.9281]
+o7 call [56.9308] [9.9281]
+o7 call [56.9308] [12.4681]
+o7 call [54.3908] [12.4681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3210,6 +5567,10 @@ F300.00000
 o7 call [51.8508] [11.9855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [51.8508] [9.9281]
+o7 call [54.3908] [9.9281]
+o7 call [54.3908] [12.4681]
+o7 call [51.8508] [12.4681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3218,6 +5579,10 @@ F300.00000
 o7 call [49.3108] [11.9855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [49.3108] [9.9281]
+o7 call [51.8508] [9.9281]
+o7 call [51.8508] [12.4681]
+o7 call [49.3108] [12.4681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3226,6 +5591,10 @@ F300.00000
 o7 call [46.7708] [11.9855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [46.7708] [9.9281]
+o7 call [49.3108] [9.9281]
+o7 call [49.3108] [12.4681]
+o7 call [46.7708] [12.4681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3234,6 +5603,10 @@ F300.00000
 o7 call [44.2308] [11.9855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [44.2308] [9.9281]
+o7 call [46.7708] [9.9281]
+o7 call [46.7708] [12.4681]
+o7 call [44.2308] [12.4681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3242,6 +5615,10 @@ F300.00000
 o7 call [41.6908] [11.9855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [41.6908] [9.9281]
+o7 call [44.2308] [9.9281]
+o7 call [44.2308] [12.4681]
+o7 call [41.6908] [12.4681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3250,6 +5627,10 @@ F300.00000
 o7 call [39.1508] [11.9855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [39.1508] [9.9281]
+o7 call [41.6908] [9.9281]
+o7 call [41.6908] [12.4681]
+o7 call [39.1508] [12.4681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3258,6 +5639,10 @@ F300.00000
 o7 call [36.6108] [11.9855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [36.6108] [9.9281]
+o7 call [39.1508] [9.9281]
+o7 call [39.1508] [12.4681]
+o7 call [36.6108] [12.4681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3266,6 +5651,10 @@ F300.00000
 o7 call [34.0708] [11.9855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [34.0708] [9.9281]
+o7 call [36.6108] [9.9281]
+o7 call [36.6108] [12.4681]
+o7 call [34.0708] [12.4681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3274,6 +5663,10 @@ F300.00000
 o7 call [31.5308] [11.9855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [31.5308] [9.9281]
+o7 call [34.0708] [9.9281]
+o7 call [34.0708] [12.4681]
+o7 call [31.5308] [12.4681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3282,6 +5675,10 @@ F300.00000
 o7 call [28.9908] [11.9855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [28.9908] [9.9281]
+o7 call [31.5308] [9.9281]
+o7 call [31.5308] [12.4681]
+o7 call [28.9908] [12.4681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3290,6 +5687,10 @@ F300.00000
 o7 call [26.4508] [11.9855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [26.4508] [9.9281]
+o7 call [28.9908] [9.9281]
+o7 call [28.9908] [12.4681]
+o7 call [26.4508] [12.4681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3298,6 +5699,10 @@ F300.00000
 o7 call [23.9108] [11.9855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [23.9108] [9.9281]
+o7 call [26.4508] [9.9281]
+o7 call [26.4508] [12.4681]
+o7 call [23.9108] [12.4681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3306,6 +5711,10 @@ F300.00000
 o7 call [21.3708] [11.9855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [21.3708] [9.9281]
+o7 call [23.9108] [9.9281]
+o7 call [23.9108] [12.4681]
+o7 call [21.3708] [12.4681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3314,6 +5723,10 @@ F300.00000
 o7 call [18.8308] [11.9855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [18.8308] [9.9281]
+o7 call [21.3708] [9.9281]
+o7 call [21.3708] [12.4681]
+o7 call [18.8308] [12.4681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3322,6 +5735,10 @@ F300.00000
 o7 call [16.2908] [11.9855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [16.2908] [9.9281]
+o7 call [18.8308] [9.9281]
+o7 call [18.8308] [12.4681]
+o7 call [16.2908] [12.4681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3330,6 +5747,10 @@ F300.00000
 o7 call [13.7508] [11.9855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [13.7508] [9.9281]
+o7 call [16.2908] [9.9281]
+o7 call [16.2908] [12.4681]
+o7 call [13.7508] [12.4681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3338,6 +5759,10 @@ F300.00000
 o7 call [11.2108] [11.9855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [11.2108] [9.9281]
+o7 call [13.7508] [9.9281]
+o7 call [13.7508] [12.4681]
+o7 call [11.2108] [12.4681]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3346,6 +5771,17 @@ F300.00000
 o7 call [8.9248] [11.9855]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [8.8232] [11.9093]
+o7 call [8.6454] [11.4775]
+o7 call [8.6708] [10.8933]
+o7 call [8.7978] [10.6139]
+o7 call [9.1788] [10.1821]
+o7 call [9.4074] [10.0043]
+o7 call [9.4328] [9.9281]
+o7 call [11.2108] [9.9281]
+o7 call [11.2108] [12.4681]
+o7 call [9.4074] [12.4427]
+o7 call [8.9248] [12.0109]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3354,6 +5790,20 @@ F300.00000
 o7 call [67.0908] [9.4455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [67.0908] [8.1501]
+o7 call [67.2178] [8.0739]
+o7 call [67.7004] [7.5405]
+o7 call [68.1576] [7.3881]
+o7 call [68.564] [7.3881]
+o7 call [69.1482] [7.6167]
+o7 call [69.5292] [8.0485]
+o7 call [69.6308] [8.3533]
+o7 call [69.6562] [8.9375]
+o7 call [69.4784] [9.3693]
+o7 call [69.072] [9.7757]
+o7 call [68.945] [9.8519]
+o7 call [68.9196] [9.9281]
+o7 call [67.0908] [9.9281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3362,6 +5812,15 @@ F300.00000
 o7 call [64.5508] [9.4455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [64.5508] [8.1501]
+o7 call [64.6778] [8.0739]
+o7 call [65.1604] [7.5405]
+o7 call [65.6176] [7.3881]
+o7 call [66.024] [7.3881]
+o7 call [66.6082] [7.6167]
+o7 call [67.0908] [8.1501]
+o7 call [67.0908] [9.9281]
+o7 call [64.5508] [9.9281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3370,6 +5829,15 @@ F300.00000
 o7 call [62.0108] [9.4455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [62.0108] [8.1501]
+o7 call [62.1378] [8.0739]
+o7 call [62.6204] [7.5405]
+o7 call [63.0776] [7.3881]
+o7 call [63.484] [7.3881]
+o7 call [64.0682] [7.6167]
+o7 call [64.5508] [8.1501]
+o7 call [64.5508] [9.9281]
+o7 call [62.0108] [9.9281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3378,6 +5846,15 @@ F300.00000
 o7 call [59.4708] [9.4455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [59.4708] [8.1501]
+o7 call [59.5978] [8.0739]
+o7 call [60.0804] [7.5405]
+o7 call [60.5376] [7.3881]
+o7 call [60.944] [7.3881]
+o7 call [61.5282] [7.6167]
+o7 call [62.0108] [8.1501]
+o7 call [62.0108] [9.9281]
+o7 call [59.4708] [9.9281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3386,6 +5863,15 @@ F300.00000
 o7 call [56.9308] [9.4455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [56.9308] [8.1501]
+o7 call [57.0578] [8.0739]
+o7 call [57.5404] [7.5405]
+o7 call [57.9976] [7.3881]
+o7 call [58.404] [7.3881]
+o7 call [58.9882] [7.6167]
+o7 call [59.4708] [8.1501]
+o7 call [59.4708] [9.9281]
+o7 call [56.9308] [9.9281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3394,6 +5880,15 @@ F300.00000
 o7 call [54.3908] [9.4455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [54.3908] [8.1501]
+o7 call [54.5178] [8.0739]
+o7 call [55.0004] [7.5405]
+o7 call [55.4576] [7.3881]
+o7 call [55.864] [7.3881]
+o7 call [56.4482] [7.6167]
+o7 call [56.9308] [8.1501]
+o7 call [56.9308] [9.9281]
+o7 call [54.3908] [9.9281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3402,6 +5897,15 @@ F300.00000
 o7 call [51.8508] [9.4455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [51.8508] [8.1501]
+o7 call [51.9778] [8.0739]
+o7 call [52.4604] [7.5405]
+o7 call [52.9176] [7.3881]
+o7 call [53.324] [7.3881]
+o7 call [53.9082] [7.6167]
+o7 call [54.3908] [8.1501]
+o7 call [54.3908] [9.9281]
+o7 call [51.8508] [9.9281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3410,6 +5914,15 @@ F300.00000
 o7 call [49.3108] [9.4455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [49.3108] [8.1501]
+o7 call [49.4378] [8.0739]
+o7 call [49.9204] [7.5405]
+o7 call [50.3776] [7.3881]
+o7 call [50.784] [7.3881]
+o7 call [51.3682] [7.6167]
+o7 call [51.8508] [8.1501]
+o7 call [51.8508] [9.9281]
+o7 call [49.3108] [9.9281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3418,6 +5931,15 @@ F300.00000
 o7 call [46.7708] [9.4455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [46.7708] [8.1501]
+o7 call [46.8978] [8.0739]
+o7 call [47.3804] [7.5405]
+o7 call [47.8376] [7.3881]
+o7 call [48.244] [7.3881]
+o7 call [48.8282] [7.6167]
+o7 call [49.3108] [8.1501]
+o7 call [49.3108] [9.9281]
+o7 call [46.7708] [9.9281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3426,6 +5948,15 @@ F300.00000
 o7 call [44.2308] [9.4455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [44.2308] [8.1501]
+o7 call [44.3578] [8.0739]
+o7 call [44.8404] [7.5405]
+o7 call [45.2976] [7.3881]
+o7 call [45.704] [7.3881]
+o7 call [46.2882] [7.6167]
+o7 call [46.7708] [8.1501]
+o7 call [46.7708] [9.9281]
+o7 call [44.2308] [9.9281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3434,6 +5965,15 @@ F300.00000
 o7 call [41.6908] [9.4455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [41.6908] [8.1501]
+o7 call [41.8178] [8.0739]
+o7 call [42.3004] [7.5405]
+o7 call [42.7576] [7.3881]
+o7 call [43.164] [7.3881]
+o7 call [43.7482] [7.6167]
+o7 call [44.2308] [8.1501]
+o7 call [44.2308] [9.9281]
+o7 call [41.6908] [9.9281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3442,6 +5982,15 @@ F300.00000
 o7 call [39.1508] [9.4455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [39.1508] [8.1501]
+o7 call [39.2778] [8.0739]
+o7 call [39.7604] [7.5405]
+o7 call [40.2176] [7.3881]
+o7 call [40.624] [7.3881]
+o7 call [41.2082] [7.6167]
+o7 call [41.6908] [8.1501]
+o7 call [41.6908] [9.9281]
+o7 call [39.1508] [9.9281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3450,6 +5999,15 @@ F300.00000
 o7 call [36.6108] [9.4455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [36.6108] [8.1501]
+o7 call [36.7378] [8.0739]
+o7 call [37.2204] [7.5405]
+o7 call [37.6776] [7.3881]
+o7 call [38.084] [7.3881]
+o7 call [38.6682] [7.6167]
+o7 call [39.1508] [8.1501]
+o7 call [39.1508] [9.9281]
+o7 call [36.6108] [9.9281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3458,6 +6016,15 @@ F300.00000
 o7 call [34.0708] [9.4455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [34.0708] [8.1501]
+o7 call [34.1978] [8.0739]
+o7 call [34.6804] [7.5405]
+o7 call [35.1376] [7.3881]
+o7 call [35.544] [7.3881]
+o7 call [36.1282] [7.6167]
+o7 call [36.6108] [8.1501]
+o7 call [36.6108] [9.9281]
+o7 call [34.0708] [9.9281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3466,6 +6033,15 @@ F300.00000
 o7 call [31.5308] [9.4455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [31.5308] [8.1501]
+o7 call [31.6578] [8.0739]
+o7 call [32.1404] [7.5405]
+o7 call [32.5976] [7.3881]
+o7 call [33.004] [7.3881]
+o7 call [33.5882] [7.6167]
+o7 call [34.0708] [8.1501]
+o7 call [34.0708] [9.9281]
+o7 call [31.5308] [9.9281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3474,6 +6050,15 @@ F300.00000
 o7 call [28.9908] [9.4455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [28.9908] [8.1501]
+o7 call [29.1178] [8.0739]
+o7 call [29.6004] [7.5405]
+o7 call [30.0576] [7.3881]
+o7 call [30.464] [7.3881]
+o7 call [31.0482] [7.6167]
+o7 call [31.5308] [8.1501]
+o7 call [31.5308] [9.9281]
+o7 call [28.9908] [9.9281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3482,6 +6067,15 @@ F300.00000
 o7 call [26.4508] [9.4455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [26.4508] [8.1501]
+o7 call [26.5778] [8.0739]
+o7 call [27.0604] [7.5405]
+o7 call [27.5176] [7.3881]
+o7 call [27.924] [7.3881]
+o7 call [28.5082] [7.6167]
+o7 call [28.9908] [8.1501]
+o7 call [28.9908] [9.9281]
+o7 call [26.4508] [9.9281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3490,6 +6084,15 @@ F300.00000
 o7 call [23.9108] [9.4455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [23.9108] [8.1501]
+o7 call [24.0378] [8.0739]
+o7 call [24.5204] [7.5405]
+o7 call [24.9776] [7.3881]
+o7 call [25.384] [7.3881]
+o7 call [25.9682] [7.6167]
+o7 call [26.4508] [8.1501]
+o7 call [26.4508] [9.9281]
+o7 call [23.9108] [9.9281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3498,6 +6101,15 @@ F300.00000
 o7 call [21.3708] [9.4455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [21.3708] [8.1501]
+o7 call [21.4978] [8.0739]
+o7 call [21.9804] [7.5405]
+o7 call [22.4376] [7.3881]
+o7 call [22.844] [7.3881]
+o7 call [23.4282] [7.6167]
+o7 call [23.9108] [8.1501]
+o7 call [23.9108] [9.9281]
+o7 call [21.3708] [9.9281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3506,6 +6118,15 @@ F300.00000
 o7 call [18.8308] [9.4455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [18.8308] [8.1501]
+o7 call [18.9578] [8.0739]
+o7 call [19.4404] [7.5405]
+o7 call [19.8976] [7.3881]
+o7 call [20.304] [7.3881]
+o7 call [20.8882] [7.6167]
+o7 call [21.3708] [8.1501]
+o7 call [21.3708] [9.9281]
+o7 call [18.8308] [9.9281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3514,6 +6135,15 @@ F300.00000
 o7 call [16.2908] [9.4455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [16.2908] [8.1501]
+o7 call [16.4178] [8.0739]
+o7 call [16.9004] [7.5405]
+o7 call [17.3576] [7.3881]
+o7 call [17.764] [7.3881]
+o7 call [18.3482] [7.6167]
+o7 call [18.8308] [8.1501]
+o7 call [18.8308] [9.9281]
+o7 call [16.2908] [9.9281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3522,6 +6152,15 @@ F300.00000
 o7 call [13.7508] [9.4455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [13.7508] [8.1501]
+o7 call [13.8778] [8.0739]
+o7 call [14.3604] [7.5405]
+o7 call [14.8176] [7.3881]
+o7 call [15.224] [7.3881]
+o7 call [15.8082] [7.6167]
+o7 call [16.2908] [8.1501]
+o7 call [16.2908] [9.9281]
+o7 call [13.7508] [9.9281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3530,6 +6169,15 @@ F300.00000
 o7 call [11.2108] [9.4455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [11.2108] [8.1501]
+o7 call [11.3378] [8.0739]
+o7 call [11.8204] [7.5405]
+o7 call [12.2776] [7.3881]
+o7 call [12.684] [7.3881]
+o7 call [13.2682] [7.6167]
+o7 call [13.7508] [8.1501]
+o7 call [13.7508] [9.9281]
+o7 call [11.2108] [9.9281]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3538,6 +6186,18 @@ F300.00000
 o7 call [8.9248] [9.4455]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [8.8232] [9.3693]
+o7 call [8.6454] [8.9375]
+o7 call [8.6708] [8.3533]
+o7 call [8.7978] [8.0739]
+o7 call [9.2804] [7.5405]
+o7 call [9.7376] [7.3881]
+o7 call [10.144] [7.3881]
+o7 call [10.7282] [7.6167]
+o7 call [11.2108] [8.1501]
+o7 call [11.2108] [9.9281]
+o7 call [9.4074] [9.9027]
+o7 call [8.9248] [9.4709]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3546,6 +6206,10 @@ F300.00000
 o7 call [41.4368] [6.1181]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [41.4368] [2.9939]
+o7 call [44.2308] [2.9939]
+o7 call [44.2308] [6.7531]
+o7 call [41.4368] [6.7531]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3554,6 +6218,10 @@ F300.00000
 o7 call [38.8968] [6.1181]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [38.8968] [2.9939]
+o7 call [41.4114] [2.9685]
+o7 call [41.4368] [6.7531]
+o7 call [38.8968] [6.7531]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3562,6 +6230,10 @@ F300.00000
 o7 call [36.3568] [6.1181]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [36.3568] [2.9939]
+o7 call [38.8714] [2.9685]
+o7 call [38.8968] [6.7531]
+o7 call [36.3568] [6.7531]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3570,6 +6242,10 @@ F300.00000
 o7 call [33.8168] [6.1181]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [33.8168] [2.9939]
+o7 call [36.3314] [2.9685]
+o7 call [36.3568] [6.7531]
+o7 call [33.8168] [6.7531]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3578,6 +6254,21 @@ F300.00000
 o7 call [31.5562] [6.1181]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [31.3784] [5.9149]
+o7 call [31.2514] [5.8387]
+o7 call [31.1244] [5.9149]
+o7 call [30.9212] [6.2197]
+o7 call [30.8196] [6.2197]
+o7 call [30.7942] [4.6195]
+o7 call [30.8196] [3.5273]
+o7 call [30.9212] [3.5273]
+o7 call [31.1752] [3.8829]
+o7 call [31.3276] [3.8829]
+o7 call [31.5308] [3.6797]
+o7 call [31.5562] [2.9939]
+o7 call [33.8168] [2.9685]
+o7 call [33.8168] [6.7277]
+o7 call [31.5562] [6.7531]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3586,6 +6277,31 @@ F300.00000
 o7 call [23.9362] [6.1181]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [23.7838] [5.8895]
+o7 call [23.7076] [5.5593]
+o7 call [23.6822] [4.3655]
+o7 call [23.733] [4.0099]
+o7 call [24.0124] [3.4765]
+o7 call [24.495] [3.1463]
+o7 call [24.8506] [3.0955]
+o7 call [25.3586] [3.1463]
+o7 call [25.8412] [3.4765]
+o7 call [25.9936] [3.7305]
+o7 call [26.2222] [3.9083]
+o7 call [26.3492] [3.8321]
+o7 call [26.5524] [3.5273]
+o7 call [26.7048] [3.5273]
+o7 call [26.6794] [6.2451]
+o7 call [26.5778] [6.2451]
+o7 call [26.273] [5.8387]
+o7 call [26.1714] [5.8387]
+o7 call [25.8158] [6.2959]
+o7 call [25.5872] [6.4737]
+o7 call [25.3078] [6.6007]
+o7 call [24.9776] [6.6769]
+o7 call [24.622] [6.6261]
+o7 call [24.0886] [6.3467]
+o7 call [23.9362] [6.1435]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3594,6 +6310,10 @@ F300.00000
 o7 call [18.5768] [6.1181]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [18.5768] [2.9939]
+o7 call [21.3708] [2.9939]
+o7 call [21.3708] [6.7531]
+o7 call [18.5768] [6.7531]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3602,6 +6322,10 @@ F300.00000
 o7 call [16.0368] [6.1181]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [16.0368] [2.9939]
+o7 call [18.5514] [2.9685]
+o7 call [18.5768] [6.7531]
+o7 call [16.0368] [6.7531]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3610,6 +6334,10 @@ F300.00000
 o7 call [13.4968] [6.1181]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [13.4968] [2.9939]
+o7 call [16.0114] [2.9685]
+o7 call [16.0368] [6.7531]
+o7 call [13.4968] [6.7531]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3618,6 +6346,10 @@ F300.00000
 o7 call [10.9568] [6.1181]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [10.9568] [2.9939]
+o7 call [13.4714] [2.9685]
+o7 call [13.4968] [6.7531]
+o7 call [10.9568] [6.7531]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3626,6 +6358,10 @@ F300.00000
 o7 call [8.4168] [6.1181]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [8.4168] [2.9939]
+o7 call [10.9314] [2.9685]
+o7 call [10.9568] [6.7531]
+o7 call [8.4168] [6.7531]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
@@ -3634,6 +6370,10 @@ F300.00000
 o7 call [5.5212] [6.1181]
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 F600.00000
+o7 call [5.5212] [2.9939]
+o7 call [8.4168] [2.9939]
+o7 call [8.4168] [6.7531]
+o7 call [5.5212] [6.7531]
 
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z40.00000 ( retract )
