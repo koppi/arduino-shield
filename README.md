@@ -49,6 +49,6 @@ END.
 
 ### fabrication
 
-* On a CNC run ```arduino-shield-with-probe_front.ngc```, then ```arduino-shield-with-probe_drill.ngc```, then ```arduino-shield-with-probe_outline.ngc```.
+* On a CNC run ```arduino-shield-with-probe_back.ngc```, then ```arduino-shield-with-probe_drill.ngc```, then ```arduino-shield-with-probe_outline.ngc```.
 
 ![Fabricated Arduino Shield](pics/20150609-001.jpg)
