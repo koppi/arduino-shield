@@ -47,8 +47,8 @@ Exporting drill... DONE.
 END.
 ```
 
-### fabrication
+### fabrication process
 
-* On a CNC run ```arduino-shield-with-probe_back.ngc```, then ```arduino-shield-with-probe_drill.ngc```, then ```arduino-shield-with-probe_outline.ngc```.
+See [Video](https://www.youtube.com/watch?v=2nGcliWefek). On a CNC run ```arduino-shield-with-probe_back.ngc```, then ```arduino-shield-with-probe_drill.ngc```, then ```arduino-shield-with-probe_outline.ngc```.
 
 ![Fabricated Arduino Shield](pics/20150609-001.jpg)
