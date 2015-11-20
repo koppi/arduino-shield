@@ -52,3 +52,8 @@ END.
 See [Video](https://www.youtube.com/watch?v=2nGcliWefek). On a CNC run ```arduino-shield-with-probe_back.ngc```, then ```arduino-shield-with-probe_drill.ngc```, then ```arduino-shield-with-probe_outline.ngc```.
 
 ![Fabricated Arduino Shield](pics/20150609-001.jpg)
+
+### license and attribution
+
+* This repo is provided by the author under the terms of [Creative Commons Attribution Share-Alike License 4.0 CC-BY-SA](https://creativecommons.org/licenses/by-sa/4.0/). The Arduino footprint in this project comes from the [Freetronics KiCad schematic symbol & footprint library](https://github.com/freetronics/freetronics_kicad_library) (and was not modified in any way).
+* nicholaslclews published [Arduino Shield footprints for Kicad on Thingiverse](http://www.thingiverse.com/thing:9630) as [CC-BY](http://creativecommons.org/licenses/by/3.0/). These were modified by [Freetronics](https://github.com/freetronics) (R3 additions, etc) to become the ones in the [Freetronics KiCad schematic symbol & footprint library](https://github.com/freetronics/freetronics_kicad_library) library.
