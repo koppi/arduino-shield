@@ -8,6 +8,8 @@ Layout
 
 ### pcbgcode
 
+Build and install latest [pcb2gcode](https://github.com/pcb2gcode/pcb2gcode).
+
 ```bash
 $ make
 # without probing
