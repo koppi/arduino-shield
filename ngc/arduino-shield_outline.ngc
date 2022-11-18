@@ -1,58 +1,88 @@
-( pcb2gcode 1.3.0 )
-( Gcode for LinuxCNC )
+( pcb2gcode 2.5.0 )
+( Software-independent Gcode )
 
 
 G94 ( Millimeters per minute feed rate. )
 G21 ( Units == Millimeters. )
 
 G90 ( Absolute coordinates. )
-S10000 ( RPM spindle speed. )
-G64 P0.00200 ( set maximum deviation from commanded toolpath )
-F600.00000 ( Feedrate. )
+G00 S10000 ( RPM spindle speed. )
+G64 P0.01016 ( set maximum deviation from commanded toolpath )
+G01 F600.00000 ( Feedrate. )
 
-F600.00000 ( Feedrate. )
+
+G00 Z40.00000 (Retract to tool change height)
+T0
+M5      (Spindle stop.)
+G04 P1.00000 (Wait for spindle to stop)
+(MSG, Change tool bit to cutter diameter 2.00000mm)
+M6      (Tool change.)
+M0      (Temporary machine stop.)
 M3 ( Spindle on clockwise. )
-
-o1 sub ( Main subroutine )
-
+G04 P1.00000 (Wait for spindle to get up to speed)
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
 G00 Z0.50000 ( retract )
 
-G00 X68.94500 Y55.34330 ( rapid move to begin. )
+G00 X1.19048 Y2.19050 ( rapid move to begin. )
 G01 Z-1.65000 F300.00000 ( plunge. )
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
-F600.00000
-X68.94500 Y55.34330
-X69.32600 Y54.96230
-X69.32600 Y43.53230
-X71.86600 Y40.99230
-X71.86600 Y6.80390
-X69.32600 Y4.26390
-X69.32600 Y1.72390
-X69.24980 Y1.62230
-X1.99060 Y1.59690
-X1.88900 Y1.67310
-X1.86360 Y56.23230
-X1.93980 Y56.33390
-X67.92900 Y56.35930
-X68.94500 Y55.34330
-
-o1 endsub
-
-o1 call
-G92 X[#5420-[73.221599]]
-o1 call
-G92 Y[#5421-[56.902101]]
-o1 call
-G92 X[#5420-[-73.221599]]
-o1 call
-G92 Y[#5421-[-56.902101]]
+G01 F600.00000
+G01 X1.19048 Y55.53050
+G01 X1.20970 Y55.72557
+G01 X1.26660 Y55.91318
+G01 X1.35901 Y56.08605
+G01 X1.48339 Y56.23759
+G01 X1.63493 Y56.36197
+G01 X1.80780 Y56.45437
+G01 X1.99540 Y56.51127
+G01 X2.19050 Y56.53050
+G01 X66.96050 Y56.53050
+G01 X67.15557 Y56.51127
+G01 X67.34318 Y56.45437
+G01 X67.51605 Y56.36197
+G01 X67.66759 Y56.23759
+G01 X68.93759 Y54.96759
+G01 X69.06197 Y54.81605
+G01 X69.15437 Y54.64318
+G01 X69.21127 Y54.45557
+G01 X69.23050 Y54.26050
+G01 X69.23050 Y43.24470
+G01 X71.47759 Y40.99759
+G01 X71.60197 Y40.84605
+G01 X71.69437 Y40.67318
+G01 X71.75127 Y40.48557
+G01 X71.77050 Y40.29050
+G01 X71.77050 Y7.27050
+G01 X71.75127 Y7.07540
+G01 X71.69437 Y6.88780
+G01 X71.60197 Y6.71493
+G01 X71.47759 Y6.56339
+G01 X69.23050 Y4.31628
+G01 X69.23050 Y2.19050
+G01 X69.21127 Y1.99540
+G01 X69.15437 Y1.80780
+G01 X69.06197 Y1.63493
+G01 X68.93759 Y1.48339
+G01 X68.78605 Y1.35901
+G01 X68.61318 Y1.26660
+G01 X68.42557 Y1.20970
+G01 X68.23050 Y1.19048
+G01 X2.19050 Y1.19048
+G01 X1.99540 Y1.20970
+G01 X1.80780 Y1.26660
+G01 X1.63493 Y1.35901
+G01 X1.48339 Y1.48339
+G01 X1.35901 Y1.63493
+G01 X1.26660 Y1.80780
+G01 X1.20970 Y1.99540
+G01 X1.19048 Y2.19050
 
 G04 P0 ( dwell for no time -- G64 should not smooth over this point )
-G00 Z40.000 ( retract )
+G00 Z40.000000 ( retract )
 
 
 M5 ( Spindle off. )
+G04 P1.000000
 M9 ( Coolant off. )
 M2 ( Program end. )
 
